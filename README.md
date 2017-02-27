@@ -4,10 +4,10 @@ A simple python scrript to run n times of AddBookingRequest and CancelBookingReq
 
 # Install
 
-1. Install python 3.6. (Remember to check add to PATH when installing)
-2. Download and extract the content. 
-3. Open `cmd`, `cd` to the directory with extracted script. (Try `python --version`, if something went wrong try add python to system PATH)
-4. run `pip install requests`
+1. Install [python 3.6](https://www.python.org/ftp/python/3.6.0/python-3.6.0.exe). (Remember to check add to PATH when installing)
+2. Unzip the content. 
+3. Open `cmd`, `cd` to the directory with extracted script. (Try `python --version`, if something went wrong try [add python executable folder to system or local PATH](http://stackoverflow.com/questions/3701646/how-to-add-to-the-pythonpath-in-windows-7))
+4. run `pip install requests`.
 
 # Run
 

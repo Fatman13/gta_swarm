@@ -7,9 +7,10 @@ from xml.etree import ElementTree as ET
 import requests
 import datetime as datetime
 
-# config variables 
+# url of rbs API
 url = 'https://interface.demo.gta-travel.com/rbshkapi/RequestListenerServlet'
-counter = 10 # cannot be zero
+# number of add and cancel booking pair to be run; cannot be zero
+counter = 10 
 
 Ids = []
 trees = []
