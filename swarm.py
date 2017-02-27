@@ -5,21 +5,27 @@ import os
 import uuid
 from xml.etree import ElementTree as ET
 import requests
+import datetime as datetime
 
 # config variables 
 url = 'https://interface.demo.gta-travel.com/rbshkapi/RequestListenerServlet'
-counter = 10
+counter = 10 # cannot be zero
 
 Ids = []
 trees = []
 num_add_suc = 0
 num_cancel_suc = 0
+add_r_deltas = cancel_r_deltas = []
+add_r_max_delta = cancel_r_max_delta = datetime.timedelta.min
+add_r_min_delta = cancel_r_min_delta = datetime.timedelta.max
 
 pp = pprint.PrettyPrinter(indent=4)
 
 pp.pprint(str('/// /// /// Start Swarming /// /// ///'))
 pp.pprint('Current WD path: ' + os.getcwd())
 
+if counter <= 0:
+	pp.pprint("Error: counter less than zero...")
 
 # datafile = None
 # with open(os.path.join(os.getcwd(), 'AddBookingRequest.xml'), 'r') as f:
@@ -76,7 +82,7 @@ if len(Ids) < counter:
 for i in range(counter):
 	book_ref = str(uuid.uuid4())[:20];
 
-	pp.pprint(str(i) + 'Random Booking Reference: ' + str(book_ref))
+	pp.pprint(str(i) + ' Random Booking Reference: ' + str(book_ref))
 	add_tree.find('.//BookingReference').text = book_ref
 	# to be changed
 	add_tree.find('.//BookingDepartureDate').text = checkin_date
@@ -102,9 +108,16 @@ for i in range(counter):
 	pp.pprint('////// Add Booking Response ////// ' + str(i))
 	if r.status_code == 200:
 		num_add_suc += 1
+
 	pp.pprint('Add Booking Response status code: ' + str(r.status_code))
 	pp.pprint(r.headers)
 	pp.pprint('Add Booking Response body: ' + r.text)
+	if r.elapsed < add_r_min_delta:
+		add_r_min_delta = r.elapsed
+	if r.elapsed > add_r_max_delta:
+		add_r_max_delta = r.elapsed
+	add_r_deltas.append(r.elapsed)
+	pp.pprint('Response time: ' + str(r.elapsed))
 
 
 	r = requests.post(url, data=ET.tostring(cancel_tree.getroot(), encoding='UTF-8', method='xml'))
@@ -114,7 +127,16 @@ for i in range(counter):
 	pp.pprint('Cancel Booking Response status code: ' + str(r.status_code))
 	pp.pprint(r.headers)
 	pp.pprint('Cancel Booking Response body: ' + r.text)
+	if r.elapsed < cancel_r_min_delta:
+		cancel_r_min_delta = r.elapsed
+	if r.elapsed > cancel_r_max_delta:
+		cancel_r_max_delta = r.elapsed
+	cancel_r_deltas.append(r.elapsed)
+	pp.pprint('Response time: ' + str(r.elapsed))
+
 
 pp.pprint('/// /// /// Test Result /// /// ///')
 pp.pprint(str(num_add_suc) + ' out of ' + str(counter) + ' AddBookingrequest got HTTP 200')
 pp.pprint(str(num_cancel_suc) + ' out of ' + str(counter) + ' CancelBookingrequest got HTTP 200')
+pp.pprint('AddBookingrequest min: ' + str(add_r_min_delta) + ' max: ' + str(add_r_max_delta) + ' average: ' + str(sum(add_r_deltas, datetime.timedelta(0)) / len(add_r_deltas)))
+pp.pprint('CancelBookingrequest min: ' + str(cancel_r_min_delta) + ' max: ' + str(cancel_r_max_delta) + ' average: ' + str(sum(cancel_r_deltas, datetime.timedelta(0)) / len(cancel_r_deltas)))
