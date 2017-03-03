@@ -17,7 +17,7 @@ is_unique = True
 
 gta_keys = []
 gta_keys_sorted = []
-gta_keys_dup = []
+gta_keys_dup = set()
 duplicates = {}
 
 with open('Confident.csv', encoding='utf-8') as csvfile:
@@ -38,7 +38,7 @@ with open('Confident.csv', encoding='utf-8') as csvfile:
 	pre_key = ''
 	for key in gta_keys_sorted:
 		if pre_key == key:
-			gta_keys_dup.append(key)
+			gta_keys_dup.add(key)
 		pre_key = key
 
 	pp.pprint('GTA keys dup list: ' + str(gta_keys_dup))
