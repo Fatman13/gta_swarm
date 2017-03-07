@@ -20,7 +20,7 @@ gta_keys_sorted = []
 gta_keys_dup = set()
 duplicates = {}
 
-with open('Confident.csv', encoding='utf-8') as csvfile:
+with open('Confident.csv', encoding='utf-8-sig') as csvfile:
 	reader = csv.DictReader(csvfile, delimiter='|')
 	# pp.pprint(reader.__class__)
 	# pp.pprint(reader.fieldnames)
