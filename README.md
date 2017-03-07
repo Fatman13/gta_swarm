@@ -38,7 +38,10 @@ Dump relavant information of a hotel on ctrip given ctrip hotel id.
 ### Run Ctrip
 
 1. Open `cmd`, within the directory of the script, run `python ctrip.py`
-2. Another example, run `python ctrip.py --hotel 996727 --ci 2017-06-01 --co 2017-06-02`
+2. Another example, run `python ctrip.py --hotel 996727 --from_d 2017-06-01 --to_d 2017-06-05`
+3. A `output.csv` will be dumped with relavant information of the hotel.
+
+NOTE: Not well tested on different hotels, might break at any point.
 
 # GTA SWARM<a name="swarm"></a>
 
