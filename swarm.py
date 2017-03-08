@@ -104,7 +104,7 @@ for i in range(counter):
 	# xmlstr = ET.tostring(root)
 	# pprint(xmlstr)
 
-	r = requests.post(url, data=ET.tostring(add_tree.getroot(), encoding='UTF-8', method='xml'))
+	r = requests.post(url, data=ET.tostring(add_tree.getroot(), encoding='UTF-8', method='xml'), timeout=360)
 	# r.text
 	pp.pprint('////// Add Booking Response ////// ' + str(i))
 	if r.status_code == 200:
@@ -121,7 +121,7 @@ for i in range(counter):
 	pp.pprint('Response time: ' + str(r.elapsed))
 
 
-	r = requests.post(url, data=ET.tostring(cancel_tree.getroot(), encoding='UTF-8', method='xml'))
+	r = requests.post(url, data=ET.tostring(cancel_tree.getroot(), encoding='UTF-8', method='xml'), timeout=360)
 	pp.pprint('////// Cancel Booking Response ////// ' + str(i))
 	if r.status_code == 200:
 		num_cancel_suc += 1
