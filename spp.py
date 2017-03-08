@@ -28,8 +28,8 @@ res = []
 
 @click.command()
 @click.option('--hotel_code', default='MEL_912')
-@click.option('--from_d', default='2017-04-01')
-@click.option('--to_d', default='2017-04-03')
+@click.option('--from_d', default='2017-03-13')
+@click.option('--to_d', default='2017-03-23')
 def spp(hotel_code, from_d, to_d):
 
 	validate_d(from_d)
@@ -51,12 +51,11 @@ def spp(hotel_code, from_d, to_d):
 		r = requests.post(url, data=ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml'))
 
 		r_tree = ET.fromstring(r.text)
-		entry = dict()
-		entry['GTA_key'] = hotel_code
+		
 		if (r_tree.find('.//RoomPrice') == None):
 			# hotel_code['missing_price'].append('Pax ' + str(i + 1) + ': ' + single_date.strftime("%Y-%m-%d"))
-			# pp.pprint('Alert: Price not returned... ')
-			entry['Price'] = 'NULL'
+			pp.pprint('Alert: Price not returned... ')
+			# entry['Price'] = 'NULL'
 		else:
 			# pp.pprint('Gross: ' + str(r_tree.find('.//RoomPrice').get('Gross')))
 			for hotel in r_tree.find('.//HotelDetails'):
@@ -64,9 +63,22 @@ def spp(hotel_code, from_d, to_d):
 				for room_cat in r_tree.find('.//RoomCategories'):
 					pp.pprint('Id: ' + str(room_cat.get('Id')))
 					pp.pprint('Id: ' + str(room_cat.find('.//Description').text))
+					entry = dict()
+					entry['GTA_key'] = hotel_code
 					entry['Hotel_Name'] = hotel_name
+					entry['Room_Name'] = room_cat.find('.//Description').text
 					entry['Category_id'] = room_cat.get('Id')
-					entry['Bed'] = room_cat.find('.//Description').text
+					entry['Breakfast'] = room_cat.find('.//Basis').get('Code')
+					entry['Policy'] = ''
+					for charge_condition in room_cat.find('.//ChargeConditions'):
+						if charge_condition.get('Type') == 'cancellation':
+							for conditoin in charge_condition:
+								if conditoin.get('Charge') == 'true':
+									entry['Policy'] += 'Charge(FromDay: ' + str(conditoin.get('FromDay')) + ' ToDay: ' + str(conditoin.get('ToDay')) + ') '
+								else:
+									entry['Policy'] += 'Free(FromDay: ' + str(conditoin.get('FromDay')) + ') '
+
+
 					entry['Check_in'] = single_date.strftime('%Y-%m-%d')
 					entry['Price'] = room_cat.find('.//ItemPrice').text
 					entry['Currency'] = room_cat.find('.//ItemPrice').get('Currency')
@@ -77,7 +89,7 @@ def spp(hotel_code, from_d, to_d):
 		
 
 	keys = res[0].keys()
-	with open('output.csv', 'w') as output_file:
+	with open('output_GTA_' + hotel_code + '.csv', 'w') as output_file:
 		dict_writer = csv.DictWriter(output_file, keys)
 		dict_writer.writeheader()
 		dict_writer.writerows(res)

@@ -8,6 +8,15 @@ This is a collection of python scripts to ease daily routines of testing GTA API
 2. [sp.py](#sp)
 3. [mapping.py](#mapping)
 4. [ctrip.py](#ctrip)
+5. [spp.py](#spp)
+
+# GTA SPP<a name="spp"></a>
+
+Dump a csv file of specified GTA hotel code with relavant information.
+
+### Run SPP
+
+1. run `python ctrip.py --hotel_code MEL_912 --from_d 2017-06-01 --to_d 2017-06-05`
 
 # GTA SP<a name="sp"></a>
 
