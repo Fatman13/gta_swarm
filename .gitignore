@@ -2,6 +2,8 @@
 Confident.csv
 *.csv
 ctrip.py
+ctriptrip.py
+geckodriver.log
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

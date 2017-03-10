@@ -9,6 +9,15 @@ This is a collection of python scripts to ease daily routines of testing GTA API
 3. [mapping.py](#mapping)
 4. [ctrip.py](#ctrip)
 5. [spp.py](#spp)
+6. [ctriptrip.py](#ctriptrip)
+
+# Ctriptrip<a name="ctriptrip"></a>
+
+### Install ctriptrip
+
+1. Install [geckodriver](https://github.com/mozilla/geckodriver/releases) and properly [config](http://stackoverflow.com/questions/40208051/selenium-using-python-geckodriver-executable-needs-to-be-in-path) it.
+2. Install [Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/downloads).
+3. Run `pip install splinter`.
 
 # GTA SPP<a name="spp"></a>
 

@@ -48,7 +48,7 @@ def spp(hotel_code, from_d, to_d):
 	for single_date in daterange(from_date, to_date):
 		search_tree.find('.//CheckInDate').text = single_date.strftime('%Y-%m-%d')
 		
-		r = requests.post(url, data=ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml'))
+		r = requests.post(url, data=ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml'), timeout=360)
 
 		r_tree = ET.fromstring(r.text)
 		
