@@ -1,15 +1,15 @@
 # Intro
 
-This is a collection of python scripts to ease daily routines of testing GTA API and analysis tools.
+This is a collection of python scripts for daily routines of testing GTA API and analysis tools.
 
 # Content
 
-1. [swarm.py](#swarm)
-2. [sp.py](#sp)
-3. [mapping.py](#mapping)
-4. [ctrip.py](#ctrip)
-5. [spp.py](#spp)
-6. [ctriptrip.py](#ctriptrip)
+1. [swarm.py](#swarm) - A simple python scrript to run n times of AddBookingRequest and CancelBookingRequest by response from SearchHotelPriceRequest.
+2. [sp.py](#sp) - Take in a list of hotel codes defined in hotel_codes and do pax 1, 2, 3 search on each of the hotel. 
+3. [mapping.py](#mapping) - Checking if a csv file have duplicate GTA_key in hotel mapping.
+4. [ctrip.py](#ctrip) - Dump relavant information of a hotel on ctrip given ctrip hotel id.
+5. [spp.py](#spp) - Dump a csv file of specified GTA hotel code with relavant information.
+6. [ctriptrip.py](#ctriptrip) - A script using webdriver to download all rate plan of a specific hotel on ctrip
 
 # Ctriptrip<a name="ctriptrip"></a>
 
@@ -19,17 +19,17 @@ This is a collection of python scripts to ease daily routines of testing GTA API
 2. Install [Chromedriver](https://sites.google.com/a/chromium.org/chromedriver/downloads).
 3. Run `pip install splinter`.
 
-# GTA SPP<a name="spp"></a>
+### Run 
 
-Dump a csv file of specified GTA hotel code with relavant information.
+1. Run `python ctriptrip.py --hotel 4512809 --from_d 2017-05-05 --to_d 2017-05-15`
+
+# SPP<a name="spp"></a>
 
 ### Run SPP
 
-1. run `python ctrip.py --hotel_code MEL_912 --from_d 2017-06-01 --to_d 2017-06-05`
+1. Run `python ctrip.py --hotel_code MEL_912 --from_d 2017-06-01 --to_d 2017-06-05`
 
-# GTA SP<a name="sp"></a>
-
-Take in a list of hotel codes defined in hotel_codes and do pax 1, 2, 3 search on each of the hotel. 
+# SP<a name="sp"></a>
 
 ### Install sp
 
@@ -40,13 +40,11 @@ Take in a list of hotel codes defined in hotel_codes and do pax 1, 2, 3 search o
 1. Hotel codes shoul be put one per line in hotel_codes file.
 2. `url`, `from_date` and `to_date` can be configed on top of the sp.py file.
 
-# GTA Mapping<a name="swarm"></a>
+# Mapping<a name="mapping"></a>
 
-Checking if a csv file have duplicate GTA_key in hotel mapping.
+empty
 
-# GTA Ctrip<a name="ctrip"></a>
-
-Dump relavant information of a hotel on ctrip given ctrip hotel id.
+# Ctrip<a name="ctrip"></a>
 
 ### Install Ctrip
 
@@ -61,9 +59,7 @@ Dump relavant information of a hotel on ctrip given ctrip hotel id.
 
 NOTE: Not well tested on different hotels, might break at any point.
 
-# GTA SWARM<a name="swarm"></a>
-
-A simple python scrript to run n times of AddBookingRequest and CancelBookingRequest by response from SearchHotelPriceRequest.
+# SWARM<a name="swarm"></a>
 
 ### Install Swarm
 
