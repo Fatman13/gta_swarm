@@ -89,7 +89,7 @@ def spp(hotel_code, from_d, to_d):
 		
 
 	keys = res[0].keys()
-	with open('output_GTA_' + hotel_code + '.csv', 'w') as output_file:
+	with open('output_GTA_' + hotel_code + '.csv', 'w', encoding='utf-8') as output_file:
 		dict_writer = csv.DictWriter(output_file, keys)
 		dict_writer.writeheader()
 		dict_writer.writerows(res)

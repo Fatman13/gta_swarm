@@ -8,7 +8,7 @@ import requests
 import datetime as datetime
 
 # url of rbs API
-url = 'https://interface.demo.gta-travel.com/rbshkapi/RequestListenerServlet'
+url = 'https://origin-interface.demo.gta-travel.com/rbshkapi/RequestListenerServlet'
 # number of add and cancel booking pair to be run; cannot be zero
 counter = 10 
 
