@@ -25,6 +25,7 @@ pp.pprint('how many days: ' + str(counter))
 hotel_codes = []
 with open('hotel_codes', 'r') as file:
 	for line in file:
+		# pp.pprint(line)
 		city_code, item_code = line.rstrip().split('_')
 		hotel_codes.append(dict([('city_code', city_code), ('item_code', item_code), ('missing_price', [])]))
 
