@@ -25,8 +25,9 @@ def daterange(start_date, end_date):
 @click.option('--file_name', default='hotel_codes')
 @click.option('--from_d', default='2017-03-20')
 @click.option('--to_d', default='2017-04-20')
+@click.option('--n_sample', default=30, type=int)
 @click.option('--skip/--no--skip', default=False)
-def spplus(file_name, from_d, to_d, skip):
+def spplus(file_name, from_d, to_d, skip, n_sample):
 
 	url = 'https://rbs.gta-travel.com/rbscnapi/RequestListenerServlet'
 	pp = pprint
@@ -46,6 +47,8 @@ def spplus(file_name, from_d, to_d, skip):
 			# pp.pprint(line)
 			city_code, item_code = line.rstrip().split('_')
 			hotel_codes.append(dict([('city_code', city_code), ('item_code', item_code), ('missing_price', [])]))
+
+	hotel_codes = [ hotel_codes[i] for i in sorted(random.sample(xrange(len(hotel_codes)), n_sample)) ]
 
 	search_tree = ET.parse(os.path.join(os.getcwd(), 'SearchHotelPricePaxRequest.xml'))
 
