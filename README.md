@@ -11,6 +11,13 @@ This is a collection of python scripts for daily routines of testing GTA API and
 5. [spp.py](#spp) - Dump a csv file of specified GTA hotel code with relavant information.
 6. [ctriptrip.py](#ctriptrip) - A script using webdriver to download all rate plan of a specific hotel on ctrip
 7. [spplus.py](#spplus) - Dump a csv of dates when GTA hotel has a price 
+8. [elong.py](#elong) - Dump a csv of price differences between what GTA offers and the lowest by Elong
+
+# Elong<a name="elong"></a>
+
+### Run
+
+1. Run `python elong.py --hotel 330229`
 
 # spplus<a name="spplus"></a>
 
@@ -18,6 +25,7 @@ This is a collection of python scripts for daily routines of testing GTA API and
 
 1. Run `python spplus.py --from_d 2017-04-20 --to_d 2017-05-20 --file_name hotel_codes`.
 2. You coud add `--skip` option to skip some dates.
+3. `--n_sample` option will sample random entries in `--file_name`, ex: `--n_sample 100`
 
 # Ctriptrip<a name="ctriptrip"></a>
 
