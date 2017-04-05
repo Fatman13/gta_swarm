@@ -9,8 +9,8 @@ import datetime as datetime
 
 # url of rbs API
 url = 'https://rbs.gta-travel.com/rbscnapi/RequestListenerServlet'
-from_date = datetime.date(2017, 4, 3)
-to_date = datetime.date(2017, 4, 5)
+from_date = datetime.date(2017, 4, 5)
+to_date = datetime.date(2017, 4, 6)
 counter = (to_date - from_date).days
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -50,7 +50,7 @@ for hotel_code in hotel_codes:
 
 			pp.pprint('Search price status code: ' + str(r.status_code))
 			# pp.pprint(r.headers)
-			# pp.pprint('Search price Response body: ' + r.text)
+			pp.pprint('Search price Response body: ' + r.text)
 
 			r_tree = ET.fromstring(r.text)
 			if (r_tree.find('.//RoomPrice') == None):

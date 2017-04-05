@@ -25,8 +25,8 @@ def daterange(start_date, end_date):
 
 @click.command()
 @click.option('--file_name', default='hotel_codes')
-@click.option('--from_d', default='2017-03-25')
-@click.option('--to_d', default='2017-04-25')
+@click.option('--from_d', default='2017-04-15')
+@click.option('--to_d', default='2017-04-20')
 @click.option('--n_sample', default=30, type=int)
 @click.option('--skip/--no--skip', default=False)
 @click.option('--sample/--no--sample', default=False)
@@ -105,7 +105,8 @@ def spplus(file_name, from_d, to_d, skip, n_sample, sample):
 					# pp.pprint('Gross: ' + str(r_tree.find('.//RoomPrice').get('Gross')))
 					for room_cat in r_tree.find('.//RoomCategories'):
 						pp.pprint('Id: ' + str(room_cat.get('Id')))
-						pp.pprint('Id: ' + str(room_cat.find('.//Description').text))
+						pp.pprint('Room Description: ' + str(room_cat.find('.//Description').text))
+						pp.pprint('Price: ' + str(room_cat.find('.//RoomPrice').get('Gross')))
 						has_price = True
 						# break
 
