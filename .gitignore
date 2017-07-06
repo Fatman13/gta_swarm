@@ -7,6 +7,15 @@ geckodriver.log
 elong.py
 ouput
 hotel_codes*
+client_secret.json
+sendmail.py
+gmail.py
+*.xlsx
+Thailand
+ctrip_hotel_ids
+output
+test.txt
+top30
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

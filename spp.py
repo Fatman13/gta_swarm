@@ -28,8 +28,8 @@ res = []
 
 @click.command()
 @click.option('--hotel_code', default='MEL_912')
-@click.option('--from_d', default='2017-03-13')
-@click.option('--to_d', default='2017-03-23')
+@click.option('--from_d', default='2017-06-10')
+@click.option('--to_d', default='2017-06-11')
 def spp(hotel_code, from_d, to_d):
 
 	validate_d(from_d)
