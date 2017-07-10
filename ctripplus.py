@@ -39,11 +39,13 @@ def find_entry(entry_dict, room_name):
 
 @click.command()
 @click.option('--filename', default='ctrip_hotel_ids')
-def ctripplus(filename):
+@click.option('--days', default=15, type=int)
+def ctripplus(filename, days):
 	pp = pprint
 	res = []
 
-	from_date = datetime.datetime.today().date() + datetime.timedelta(days=30)
+	# from_date = datetime.datetime.today().date() + datetime.timedelta(days=30)
+	from_date = datetime.datetime.today().date() + datetime.timedelta(days=days)
 	to_date = from_date + datetime.timedelta(days=1)
 
 	# validate_d(from_d)
@@ -262,6 +264,9 @@ def ctripplus(filename):
 	driver.quit()
 
 	# pp.pprint(res)
+	if not res:
+		pprint.pprint("List is empty! No price found for every hotel in the file!")
+		return
 
 	keys_max = None
 	k_max = 0
@@ -271,7 +276,7 @@ def ctripplus(filename):
 			k_max = len(ent.keys())
 
 	# keys = res[0].keys()
-	with open('output_Ctripplus_' + datetime.datetime.now().strftime('%y%m%d_%H%M') + '.csv', 'w', encoding='utf-8') as output_file:
+	with open('output_Ctripplus_' + datetime.datetime.now().strftime('%y%m%d_%H%M') + '_' + str(days) + 'days.csv', 'w', encoding='utf-8') as output_file:
 		# dict_writer = csv.DictWriter(output_file, keys)
 		dict_writer = csv.DictWriter(output_file, keys_max)
 		dict_writer.writeheader()

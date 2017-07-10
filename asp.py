@@ -25,8 +25,8 @@ def daterange(start_date, end_date):
 
 @click.command()
 @click.option('--file_name', default='top30')
-@click.option('--from_d', default='2017-06-25')
-@click.option('--to_d', default='2017-06-26')
+@click.option('--from_d', default='2017-07-29')
+@click.option('--to_d', default='2017-07-30')
 def asp(file_name, from_d, to_d):
 
 	url = 'https://rbs.gta-travel.com/rbscnapi/RequestListenerServlet'
