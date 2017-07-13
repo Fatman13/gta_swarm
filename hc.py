@@ -1,0 +1,233 @@
+#!/usr/bin/env python
+# coding=utf-8
+
+import pprint
+import csv
+import click 
+import requests
+import datetime as datetime
+from bs4 import BeautifulSoup
+# from splinter import Browser
+import time
+import re
+import copy
+import os
+import json
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException   
+from selenium.common.exceptions import ElementNotVisibleException   
+from selenium.common.exceptions import StaleElementReferenceException   
+from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import TimeoutException
+from requests.exceptions import ConnectionError
+
+hc_secret = None
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
+	hc_secret = (json.load(data_file))['hc']
+
+def validate_d(date_text):
+	try:
+		datetime.datetime.strptime(date_text, '%Y-%m-%d')
+	except ValueError:
+		raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+
+def daterange(start_date, end_date):
+    for n in range(int ((end_date - start_date).days)):
+        yield start_date + datetime.timedelta(n)
+
+HOTEL_REF = 'Hotel Ref:'
+
+def get_hotel_ref(booking_id, cookies):
+	hotel_ref_url = 'http://hotels.gta-travel.com/gcres/bookingDetail/section/' + str(booking_id) + '?cbsRevision=0'
+	try:
+		r = requests.get(hotel_ref_url, cookies=cookies, timeout=600)
+	except ConnectionError as e:
+		print('fatal Connection error...r')
+		return None
+	# print('parsing hotel ref...')
+
+	soup = BeautifulSoup(r.text)
+	hotel_ref_label = soup.find('label', {"for":"hotelRef"})
+
+	if hotel_ref_label != None:
+		hotel_ref = hotel_ref_label.parent.get_text().replace(HOTEL_REF, '').strip()
+		print(hotel_ref)
+		return hotel_ref
+	return None
+
+STATUS = 'Status:'
+
+def get_hotel_status(booking_id, cookies):
+	hotel_status_url = 'http://hotels.gta-travel.com/gcres/bookingHeader/show/' + str(booking_id) + '?cbsRevision=0'
+	try: 
+		r = requests.get(hotel_status_url, cookies=cookies, timeout=600)
+	except ConnectionError as e:
+		print('fatal Connection error...st')
+		return None
+
+	soup = BeautifulSoup(r.text)
+	hotel_status_label = soup.find('label', {"for":"status"})
+
+	if hotel_status_label != None:
+		# booking_status = hotel_status_label.parent.get_text().replace(STATUS, '').strip()
+		booking_status = ' '.join(hotel_status_label.parent.get_text().replace(STATUS, '').strip().split())
+		print(booking_status)
+		return booking_status
+	return None
+
+TO_REGISTER = 'Confirmed (to register)'
+
+def login_GCres(driver):
+	GCres_url = 'https://hotels.gta-travel.com/gcres/auth/securelogin'
+
+	try:
+		driver.get(GCres_url)
+	except TimeoutException:
+		print('f.. GCres login page time out..')
+		return
+
+	company_code = driver.find_element_by_id("qualifier")
+	username = driver.find_element_by_id("username")
+	password = driver.find_element_by_id("password")
+
+	company_code.send_keys("GTA")
+	# username.send_keys("809452")
+	username.send_keys(hc_secret['username'])
+	# password.send_keys("!234Qwer")
+	password.send_keys(hc_secret['password'])
+
+	driver.find_element_by_id("login").click()
+	time.sleep(5)
+
+	# get cookie
+	cookies = {}
+	for cookie in driver.get_cookies():
+		# pprint.pprint(cookie)
+		pprint.pprint('Setting cookie..')
+		cookies[cookie['name']] = cookie['value']
+
+	return cookies
+
+@click.command()
+@click.option('--filename', default='gtaConfirmRefs_5867_2017-06-30_2017-07-07.csv')
+# @click.option('--days', default=15, type=int)
+def hc(filename):
+
+	driver = webdriver.Firefox()
+	driver.implicitly_wait(10) 
+
+	# cookies = login_GCres(driver)
+
+	bookings = []
+	res = []
+	# filename = 'gtaConfirmRefs_5867_2017-06-30_2017-07-07.csv'
+	with open(filename, encoding='utf-8-sig') as csvfile:
+		ids = set()
+		reader = csv.DictReader(csvfile)
+		for row in reader:
+			# pp.pprint(row['hotel_id'])
+			if row['gtaBookingId'] not in ids:
+				entry = dict()
+				entry['gtaBookingId'] = row['gtaBookingId']
+				entry['agentBookingId'] = row['agentBookingId']
+				entry['confirmRef'] = row['confirmRef']
+				entry['clientBookingId'] = row['clientBookingId']
+				entry['bookingStatus'] = row['bookingStatus']
+				entry['isDI'] = row['isDI']
+				entry['hotel'] = row['hotel']
+				entry['city'] = row['city']
+				entry['iRef'] = row['iRef']
+				entry['itemStatus'] = row['itemStatus']
+				entry['rateKey'] = row['rateKey']
+				entry['cancelFee'] = row['cancelFee']
+				bookings.append(entry)
+			ids.add(row['gtaBookingId'])
+
+	for counter, booking in enumerate(bookings):
+		print('Search booking id ' + str(booking['gtaBookingId']))
+
+		if counter % 3000 == 0:
+			cookies = login_GCres(driver)
+			if not cookies:
+				print('Fatal: Failed to get cookies...')
+				break  
+
+		search_url = 'http://hotels.gta-travel.com/gcres/bookingSearch/search'
+		payload = {'bookingId': booking['gtaBookingId'],
+				'searchType': 'manual',
+				'currentLanguage': 'en',
+				'bookingType': 'F',
+				'dateType': 'A',
+				'statusAll': '*',
+				'statuses': 'P',
+				'statuses': 'C',
+				'statuses': 'R',
+				'statuses': 'X',
+				'search': 'Search'}
+		try:
+			r = requests.get(search_url, params=payload, cookies=cookies, timeout=600)
+		except ConnectionError as e:
+			print('fatal Connection error...s')
+			continue
+		# print(r.text)
+
+		soup = BeautifulSoup(r.text)
+
+		for i in range(4):
+			tr_element = soup.find('tr', id='bkgList_row' + str(i))
+			if tr_element == None:
+				continue
+			hotel_onclick = tr_element['onclick']
+			# print(hotel_onclick)
+
+			try:
+				booking_id = re.search('/gcres/bookingHeader/show/(\d+)', hotel_onclick).group(1)
+			except AttributeError:
+				booking_id = ''
+
+			if booking_id == '':
+				continue
+			print('Booking id: ' + booking_id)
+
+			booking['confirmRef'] = get_hotel_ref(booking_id, cookies)
+			booking['booking_status'] = get_hotel_status(booking_id, cookies)
+
+			entry = copy.deepcopy(booking)
+			res.append(entry)
+
+	# print('fetching hotel ref...')
+
+	# hotel_ref_url = 'http://hotels.gta-travel.com/gcres/bookingDetail/section/37102807?cbsRevision=0'
+	# r = requests.get(hotel_ref_url, cookies=cookies)
+
+	# # print(r.text)
+	# print('parsing hotel ref...')
+
+	# soup = BeautifulSoup(r.text)
+	# # hotel_ref = name = soup.find('label', attrs={"for":True}).get_text()
+	# # hotel_ref_label = name = soup.find('label', {"for":"hotelRef"}).get_text()
+	# hotel_ref_label = soup.find('label', {"for":"hotelRef"})
+
+	# if hotel_ref_label != None:
+	# 	hotel_ref = hotel_ref_label.parent.get_text().replace(HOTEL_REF, '').strip()
+	# 	print(hotel_ref)
+
+	# cookies = dict(JSESSIONID='A43FFE768312463D43CFE945A5292EB9.01bgs-tc4',
+	# 				__qca='P0-1834765283-1494573658960',
+	# 				_ga='GA1.2.440674599.1494573659',
+	# 				qualifier='GTA')
+
+	driver.quit()
+
+	keys = res[0].keys()
+	with open('output_hotel_ref_' + datetime.datetime.now().strftime('%y%m%d_%H%M') + '.csv', 'w', encoding='utf-8') as output_file:
+		dict_writer = csv.DictWriter(output_file, keys)
+		# dict_writer = csv.DictWriter(output_file, field_names)
+		dict_writer.writeheader()
+		dict_writer.writerows(res)
+
+if __name__ == '__main__':
+	hc()

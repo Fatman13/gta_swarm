@@ -13,9 +13,10 @@ gmail.py
 *.xlsx
 Thailand
 ctrip_hotel_ids
-output
+output*
 test.txt
 top30
+secrets.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

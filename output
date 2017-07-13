@@ -1,7 +1,136 @@
-'http://hotels.ctrip.com/international/704898.html?CheckIn=2017-07-21&CheckOut=2017-07-22&fixsubhotel=t'
-'http://hotels.ctrip.com/international/686543.html?CheckIn=2017-07-21&CheckOut=2017-07-22&fixsubhotel=t'
-'http://hotels.ctrip.com/international/737160.html?CheckIn=2017-07-21&CheckOut=2017-07-22&fixsubhotel=t'
-'http://hotels.ctrip.com/international/701442.html?CheckIn=2017-07-21&CheckOut=2017-07-22&fixsubhotel=t'
-'http://hotels.ctrip.com/international/3159827.html?CheckIn=2017-07-21&CheckOut=2017-07-22&fixsubhotel=t'
-'http://hotels.ctrip.com/international/928337.html?CheckIn=2017-07-21&CheckOut=2017-07-22&fixsubhotel=t'
-[]
+
+
+
+
+
+
+
+
+
+
+<div style="display:none;">
+	
+</div>
+
+
+	
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+
+<div id="bookingDetailSection" class="simpleheader  simplesection">
+	
+		<span class="clickable" onclick="smartExpander(this,event,{section:'bookingDetail', id:36520709, url : '/gcres/bookingDetail/show/36520709?section=bookingDetail&amp;containingElementContent=bookingDetailContent&amp;containingElementCreate=bookingDetail_create&amp;additionalParams='}) ">
+	 		<img id="bookingDetailArrow" src="/gcres/images/headerArrowRight.gif" class="arrow" alt="Open/Close"/>
+ 		<img src="/gcres/images/margin.gif" title="Margin" border="0" hspace="2" width="15" height="15" />
+ 		<span class="sectionTitle">Booking Details - Visible to Hotel</span>
+	 	</span>
+ 		
+	
+	<span id="bookingDetailContentMenuOptions" class="menuOptionsContainer"></span>
+</div>
+
+
+	<div id="bookingDetailContent" class="simplesection" style="display:none">
+		
+			
+
+
+<div id="bookingDetailHistory">
+	
+<table cellspacing="0" cellpadding="3" style="width:100%; border-collapse: collapse;">
+<tr>
+	<td width="20%"><label for="arrivalDate">Arrival Date:</label></td>
+	<td colspan="4">14Jun17 x 3 Nights</td>
+</tr>
+
+
+<tr>
+	<td>
+		
+			<label for="rooms">Rooms:</label>
+		
+	</td>
+	<td width="196px">
+		1 x Deluxe Room (DLX)
+		<span class="" style="white-space:nowrap">(Double) </span>
+		
+		
+	</td>
+	<td width="170px">
+		
+			
+			<span class=""> JINWEN ZHU</span>
+		
+			/
+			<span class=""> TBA TBA</span>
+		
+		
+	</td>
+	<td>
+		
+		<label for="hotelRef">Hotel Ref:</label>
+		Kueakun 11 June
+		
+	</td>
+</tr>
+
+
+<tr>
+	<td><label for="ratePlan">Rate Plan:</label></td>
+	<td colspan="3">BARRO-NR: BAR Room Only - Non Refundable</td>
+	
+</tr>
+
+<tr>
+	<td><label for="mealDesc">Meal Basis:</label></td>
+	<td colspan="4">Room Only</td>
+</tr>
+
+
+	<tr>
+		<td>
+			
+				<label for="offerApplied">Offer Applied:</label>
+			
+		</td>
+		<td colspan="4">Last Minute Offer Save 10%: 0-9 days Last Minute Offer Save 10%</td>
+	</tr>
+
+
+
+</table>
+
+</div>
+	 	
+	</div>
+
+
+
+	
+	<script type="text/javascript">
+
+		smartExpander(null,null,{section:'bookingDetail', id:36520709, url:'/gcres/bookingDetail/show/36520709?section=bookingDetail&amp;containingElementContent=bookingDetailContent&amp;containingElementCreate=bookingDetail_create&amp;additionalParams='});
+		//Auto display the last selected property contract
+		showSelectedContract(null, 'propertyContract', null, {propertyId:null, contractId:null, FIT:true, uuid:"null"});
+	
+</script>
+
+
+
+
+	<script type="text/javascript">
+
+		buildMenuOptions({entityName:'bookingDetail', editMode : true,params:{id: 36520709 } });
+	
+</script>
+
+
+<div class="rowSpacer"></div>

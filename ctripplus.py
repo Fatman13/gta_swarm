@@ -84,9 +84,10 @@ def ctripplus(filename, days):
 		# element = WebDriverWait(driver, 15).until(
 		# 	lambda driver: driver.execute_script("return $.isLoaded == true")
 		# )
-		time.sleep(10)
+		time.sleep(5)
 
 		entry = {}
+		entry_dict = {}
 
 		try:
 			hotel_name = driver.find_element_by_css_selector('h1.name').text
@@ -94,9 +95,16 @@ def ctripplus(filename, days):
 			continue
 
 		if len(driver.find_elements_by_css_selector('div.hroom_tr.J_baseRoomlist')) == 0:
+			# logging hotels with no price...
+			ent = {}
+			ent['ctrip_hotel_id'] = hotel_id
+			ent['Hotel_Name'] = hotel_name
+			ent['Check_in'] = from_date.strftime('%Y-%m-%d')
+			ent['GTA_Price(on ctrip)'] = -1
+			res.append(ent)
 			continue
 
-		entry_dict = {}
+		# entry_dict = {}
 
 		for i, elem in enumerate(driver.find_elements_by_css_selector('div.hroom_tr.J_baseRoomlist')):
 			# pp.pprint(elem)
@@ -159,7 +167,7 @@ def ctripplus(filename, days):
 			continue
 
 
-		time.sleep(10)
+		time.sleep(7)
 		# element = WebDriverWait(driver, 15).until(
 		# 	lambda driver: driver.execute_script("return $.isLoaded == true")
 		# )
@@ -174,7 +182,7 @@ def ctripplus(filename, days):
 		except WebDriverException:
 			pp.pprint('Error: WebDriverException when clicking expanding all...')
 
-		time.sleep(5)
+		time.sleep(3)
 
 		# pprint.pprint(entry_dict)
 

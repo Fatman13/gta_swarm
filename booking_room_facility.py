@@ -107,7 +107,7 @@ def booking():
 
 	# 
 	keys = res[0].keys()
-	with open('output_hotel_facilities_' + datetime.datetime.now().strftime('%y%m%d_%H%M') + '.csv', 'w', encoding='utf-8') as output_file:
+	with open('output_hotel_facilities_room_' + datetime.datetime.now().strftime('%y%m%d_%H%M') + '.csv', 'w', encoding='utf-8') as output_file:
 		# dict_writer = csv.DictWriter(output_file, keys)
 		dict_writer = csv.DictWriter(output_file, field_names)
 		dict_writer.writeheader()

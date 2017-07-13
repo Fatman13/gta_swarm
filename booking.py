@@ -49,13 +49,14 @@ def booking():
 	wait_m = 10
 	wait_l = 15
 
+	# with open('output_booking_hotel_tokyo_href.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_osaka_href.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_href_okinawa.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_href_sapporo.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_href_nagoya.csv', encoding='utf-8-sig') as csvfile:
-	# with open('output_booking_hotel_href_kobe.csv', encoding='utf-8-sig') as csvfile:
+	with open('output_booking_hotel_href_kobe.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_href_fukuoka.csv', encoding='utf-8-sig') as csvfile:
-	with open('output_booking_hotel_href_phuket.csv', encoding='utf-8-sig') as csvfile:
+	# with open('output_booking_hotel_href_phuket.csv', encoding='utf-8-sig') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			if row['hotel_href']:
@@ -71,11 +72,12 @@ def booking():
 				sections = driver.find_elements_by_css_selector('div.facilitiesChecklistSection')
 				entry = {}
 				entry['hotel_name'] = driver.find_element_by_css_selector('h2#hp_hotel_name').text
+				entry['hotel_star'] = driver.find_element_by_css_selector('i.bk-icon-wrapper.bk-icon-stars.star_track').get_attribute('title')
 
 				# pp.pprint(entry['hotel_name'])
 				# pp.pprint(driver.find_element_by_css_selector('h2#hp_hotel_name').text)
 
-				entry['hotel_href'] = url
+				# entry['hotel_href'] = url
 
 				for section in sections:
 					section_name = section.find_element_by_css_selector('h5').text
@@ -89,6 +91,8 @@ def booking():
 							# entry[section_name].append(str(li.text))
 							entry[str(li.text)] = 'Y'
 				# pp.pprint(entry)
+
+				entry['hotel_href'] = url
 				res.append(entry)
 				
 
@@ -97,6 +101,13 @@ def booking():
 	field_names = set()
 	for entry in res:
 		field_names |= set(entry.keys())
+
+	# keys_max = None
+	# k_max = 0
+	# for ent in res:
+	# 	if len(ent.keys()) > k_max:
+	# 		keys_max = ent.keys()
+	# 		k_max = len(ent.keys())
 
 	# 
 	keys = res[0].keys()
