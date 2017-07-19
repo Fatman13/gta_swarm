@@ -23,6 +23,7 @@ from selenium.common.exceptions import StaleElementReferenceException
 from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import TimeoutException
 from requests.exceptions import ConnectionError
+from requests.exceptions import ChunkedEncodingError
 
 hc_secret = None
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
@@ -111,8 +112,10 @@ def login_GCres(driver):
 
 	return cookies
 
+CONFIRMED = 'Confirmed or Completed'
+
 @click.command()
-@click.option('--filename', default='gtaConfirmRefs_5867_2017-06-30_2017-07-07.csv')
+@click.option('--filename', default='output_SearchItemHR_170718_1722.csv')
 # @click.option('--days', default=15, type=int)
 def hc(filename):
 
@@ -129,34 +132,44 @@ def hc(filename):
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			# pp.pprint(row['hotel_id'])
-			if row['gtaBookingId'] not in ids:
+			if row['gta_api_booking_id'] not in ids:
 				entry = dict()
-				entry['gtaBookingId'] = row['gtaBookingId']
-				entry['agentBookingId'] = row['agentBookingId']
-				entry['confirmRef'] = row['confirmRef']
-				entry['clientBookingId'] = row['clientBookingId']
-				entry['bookingStatus'] = row['bookingStatus']
-				entry['isDI'] = row['isDI']
-				entry['hotel'] = row['hotel']
-				entry['city'] = row['city']
-				entry['iRef'] = row['iRef']
-				entry['itemStatus'] = row['itemStatus']
-				entry['rateKey'] = row['rateKey']
-				entry['cancelFee'] = row['cancelFee']
+				entry['client_booking_id'] = row['client_booking_id']
+				entry['agent_booking_id'] = row['agent_booking_id']
+				entry['gta_api_booking_id'] = row['gta_api_booking_id']
+				entry['booking_status'] = row['booking_status']
+				entry['booking_creation_date'] = row['booking_creation_date']
+				entry['booking_departure_date'] = row['booking_departure_date']
+				entry['booking_name'] = row['booking_name']
+				entry['booking_net_price'] = row['booking_net_price']
+				entry['booking_currency'] = row['booking_currency']
+				entry['hotel_confirmation_#'] = ''
+				entry['hotel_confirmation_status'] = ''
+				if 'hotel_confirmation_#' in row:
+					entry['hotel_confirmation_#'] = row['hotel_confirmation_#']
+				if 'hotel_confirmation_status' in row:
+					entry['hotel_confirmation_status'] = row['hotel_confirmation_status']
 				bookings.append(entry)
-			ids.add(row['gtaBookingId'])
+			ids.add(row['gta_api_booking_id'])
+
+	# print(bookings)
 
 	for counter, booking in enumerate(bookings):
-		print('Search booking id ' + str(booking['gtaBookingId']))
+		print('Search booking id: ' + str(counter) + ': ' + str(booking['gta_api_booking_id']))
 
-		if counter % 3000 == 0:
+		if counter % 300 == 0:
+			print('Logging in..')
 			cookies = login_GCres(driver)
 			if not cookies:
 				print('Fatal: Failed to get cookies...')
 				break  
 
+		if CONFIRMED not in booking['booking_status']:
+			print('Booking not confirmed.. skipping..')
+			continue
+
 		search_url = 'http://hotels.gta-travel.com/gcres/bookingSearch/search'
-		payload = {'bookingId': booking['gtaBookingId'],
+		payload = {'bookingId': booking['gta_api_booking_id'],
 				'searchType': 'manual',
 				'currentLanguage': 'en',
 				'bookingType': 'F',
@@ -179,6 +192,11 @@ def hc(filename):
 		for i in range(4):
 			tr_element = soup.find('tr', id='bkgList_row' + str(i))
 			if tr_element == None:
+				# first time no search result from ajax search request
+				if i == 0:
+					entry = copy.deepcopy(booking)
+					res.append(entry)
+					break
 				continue
 			hotel_onclick = tr_element['onclick']
 			# print(hotel_onclick)
@@ -192,10 +210,11 @@ def hc(filename):
 				continue
 			print('Booking id: ' + booking_id)
 
-			booking['confirmRef'] = get_hotel_ref(booking_id, cookies)
-			booking['booking_status'] = get_hotel_status(booking_id, cookies)
+			booking['hotel_confirmation_#'] = get_hotel_ref(booking_id, cookies)
+			booking['hotel_confirmation_status'] = get_hotel_status(booking_id, cookies)
 
 			entry = copy.deepcopy(booking)
+			# print(entry)
 			res.append(entry)
 
 	# print('fetching hotel ref...')

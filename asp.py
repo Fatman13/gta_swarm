@@ -11,6 +11,7 @@ from xml.etree import ElementTree as ET
 import os
 # from random import sample
 import random
+import json
 # import logging
 
 def validate_d(date_text):
@@ -24,10 +25,11 @@ def daterange(start_date, end_date):
         yield start_date + datetime.timedelta(n)
 
 @click.command()
-@click.option('--file_name', default='top30')
-@click.option('--from_d', default='2017-07-29')
-@click.option('--to_d', default='2017-07-30')
-def asp(file_name, from_d, to_d):
+@click.option('--file_name', default='gta_hotel_keys')
+@click.option('--from_d', default='2017-08-03')
+@click.option('--to_d', default='2017-08-04')
+@click.option('--client', default='ctrip')
+def asp(file_name, from_d, to_d, client):
 
 	url = 'https://rbs.gta-travel.com/rbscnapi/RequestListenerServlet'
 	pp = pprint
@@ -48,8 +50,14 @@ def asp(file_name, from_d, to_d):
 			city_code, item_code = line.rstrip().split('_')
 			hotel_codes.append(dict([('city_code', city_code), ('item_code', item_code), ('missing_price', [])]))
 
+	agent_secret = None
+	with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
+		agent_secret = (json.load(data_file))[client]
 
 	search_tree = ET.parse(os.path.join(os.getcwd(), 'SearchHotelPricePaxRequest.xml'))
+	search_tree.find('.//RequestorID').set('Client', agent_secret['id'])
+	search_tree.find('.//RequestorID').set('EMailAddress', agent_secret['email'])
+	search_tree.find('.//RequestorID').set('Password', agent_secret['password'])
 
 	for hotel_code in hotel_codes:
 		pp.pprint('Searching Price for ' + hotel_code['city_code'] + ' ' + hotel_code['item_code'])
@@ -125,7 +133,7 @@ def asp(file_name, from_d, to_d):
 
 	# keys = res[0].keys()
 	# with open('output_SearchPrice_' + date.today().strftime('%Y_%m_%d') + '.csv', 'w', encoding='utf-8') as output_file:
-	with open('output_SearchPrice_' + file_name + '_' + from_date.strftime('%y_%m_%d') + '_' + datetime.datetime.now().strftime('%H%M') + '.csv', 'w', encoding='utf-8') as output_file:
+	with open('output_Search_price_' + file_name + '_' + from_date.strftime('%y_%m_%d') + '_' + datetime.datetime.now().strftime('%H%M') + '.csv', 'w', encoding='utf-8') as output_file:
 		dict_writer = csv.DictWriter(output_file, keys)
 		dict_writer.writeheader()
 		dict_writer.writerows(res)

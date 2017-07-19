@@ -54,8 +54,8 @@ def booking():
 	# with open('output_booking_hotel_href_okinawa.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_href_sapporo.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_href_nagoya.csv', encoding='utf-8-sig') as csvfile:
-	with open('output_booking_hotel_href_kobe.csv', encoding='utf-8-sig') as csvfile:
-	# with open('output_booking_hotel_href_fukuoka.csv', encoding='utf-8-sig') as csvfile:
+	# with open('output_booking_hotel_href_kobe.csv', encoding='utf-8-sig') as csvfile:
+	with open('output_booking_hotel_href_fukuoka.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_href_phuket.csv', encoding='utf-8-sig') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:

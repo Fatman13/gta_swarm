@@ -12,11 +12,13 @@ sendmail.py
 gmail.py
 *.xlsx
 Thailand
-ctrip_hotel_ids
+ctrip_hotel_ids*
 output*
 test.txt
 top30
 secrets.json
+search_item_info*
+gta_hotel_keys
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
