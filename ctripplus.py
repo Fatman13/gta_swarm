@@ -66,7 +66,9 @@ def ctripplus(filename, days):
 			# pp.pprint(row['hotel_id'])
 			hotel_ids.add(row['hotel_id'])
 
-	for hotel_id in hotel_ids:
+	for counter, hotel_id in enumerate(hotel_ids):
+		pp.print('Counter: ' + str(counter))
+
 		from_date_plus_one = from_date + datetime.timedelta(days=1)
 
 		url = 'http://hotels.ctrip.com/international/' + \

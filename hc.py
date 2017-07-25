@@ -25,6 +25,7 @@ from selenium.common.exceptions import TimeoutException
 from requests.exceptions import ConnectionError
 from requests.exceptions import ChunkedEncodingError
 
+
 hc_secret = None
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
 	hc_secret = (json.load(data_file))['hc']
@@ -75,8 +76,51 @@ def get_hotel_status(booking_id, cookies):
 	if hotel_status_label != None:
 		# booking_status = hotel_status_label.parent.get_text().replace(STATUS, '').strip()
 		booking_status = ' '.join(hotel_status_label.parent.get_text().replace(STATUS, '').strip().split())
-		print(booking_status)
+		# print(booking_status)
 		return booking_status
+	return None
+
+RESERVATIONS = 'FIT Reservations'
+
+def get_hotel_email(hotel_id, cookies):
+	# section=bookingContacts&containingElementContent=bookingContactsContent&containingElementCreate=bookingContacts_create&additionalParams=
+	payload = {'section': 'bookingContacts',
+				'containingElementContent': 'bookingContactsContent',
+				'containingElementCreate': 'bookingContacts_create'
+				}
+	hotel_status_url = 'http://hotels.gta-travel.com/gcres/bookingContacts/list/' + str(hotel_id)
+	try: 
+		r = requests.get(hotel_status_url, params=payload, cookies=cookies, timeout=600)
+	except ConnectionError as e:
+		print('fatal Connection error...st')
+		return None
+
+	soup = BeautifulSoup(r.text)
+	# hotel_email_td = soup.find("td", text=RESERVATIONS)
+	hotel_email_tbl = soup.find("tbody")
+	if hotel_email_tbl == None:
+		return None
+
+	rows = hotel_email_tbl.find_all('tr')
+	if rows == None:
+		return None
+
+	hotel_email_td = None
+
+	for row in rows:
+		cols = row.find_all('td')
+		if cols[0].text == RESERVATIONS:
+			hotel_email_td = cols[5]
+			# for i in range(5):
+			# 	hotel_email_td = hotel_email_td.find_next_sibling("td")
+			# 	break
+
+	if hotel_email_td != None:
+		# booking_status = hotel_status_label.parent.get_text().replace(STATUS, '').strip()
+		# booking_status = ' '.join(hotel_status_label.parent.get_text().replace(STATUS, '').strip().split())
+		hotel_email = hotel_email_td.text.strip()
+		print(hotel_email)
+		return hotel_email
 	return None
 
 TO_REGISTER = 'Confirmed (to register)'
@@ -115,7 +159,7 @@ def login_GCres(driver):
 CONFIRMED = 'Confirmed or Completed'
 
 @click.command()
-@click.option('--filename', default='output_SearchItemHR_170718_1722.csv')
+@click.option('--filename', default='output_Search_item_hr_170725_1109.csv')
 # @click.option('--days', default=15, type=int)
 def hc(filename):
 
@@ -185,6 +229,9 @@ def hc(filename):
 		except ConnectionError as e:
 			print('fatal Connection error...s')
 			continue
+		except ChunkedEncodingError as e:
+			print('fatal Chunked encoding error...s')
+			continue
 		# print(r.text)
 
 		soup = BeautifulSoup(r.text)
@@ -203,15 +250,19 @@ def hc(filename):
 
 			try:
 				booking_id = re.search('/gcres/bookingHeader/show/(\d+)', hotel_onclick).group(1)
+				hotel_id = re.search('/gcres/bookingContacts/section/(\d+)', hotel_onclick).group(1)
 			except AttributeError:
 				booking_id = ''
+				hotel_id = ''
 
 			if booking_id == '':
 				continue
 			print('Booking id: ' + booking_id)
+			# print('Hotel id: ' + hotel_id)
 
 			booking['hotel_confirmation_#'] = get_hotel_ref(booking_id, cookies)
 			booking['hotel_confirmation_status'] = get_hotel_status(booking_id, cookies)
+			booking['hotel_email'] = get_hotel_email(hotel_id, cookies)
 
 			entry = copy.deepcopy(booking)
 			# print(entry)
