@@ -157,6 +157,7 @@ def login_GCres(driver):
 	return cookies
 
 CONFIRMED = 'Confirmed or Completed'
+HOTEL_CONFIRMED = 'Confirmed (registered )'
 
 @click.command()
 @click.option('--filename', default='output_Search_item_hr_170725_1109.csv')
@@ -260,8 +261,19 @@ def hc(filename):
 			print('Booking id: ' + booking_id)
 			# print('Hotel id: ' + hotel_id)
 
-			booking['hotel_confirmation_#'] = get_hotel_ref(booking_id, cookies)
 			booking['hotel_confirmation_status'] = get_hotel_status(booking_id, cookies)
+
+			hotel_ref_num = get_hotel_ref(booking_id, cookies)
+			# booking['hotel_confirmation_#'] = get_hotel_ref(booking_id, cookies)
+			if hotel_ref_num == None:
+				if HOTEL_CONFIRMED in booking['hotel_confirmation_status']:
+					# on request by Lily
+					booking['hotel_confirmation_#'] = 'Confirmed'
+				else:
+					booking['hotel_confirmation_#'] = hotel_ref_num
+			if hotel_ref_num != None:
+				booking['hotel_confirmation_#'] = hotel_ref_num
+
 			booking['hotel_email'] = get_hotel_email(hotel_id, cookies)
 
 			entry = copy.deepcopy(booking)
