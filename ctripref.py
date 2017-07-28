@@ -18,8 +18,8 @@ import glob
 import time
 
 @click.command()
-@click.option('--days', default=1, type=int)
-@click.option('--duration', default=0, type=int)
+@click.option('--days', default=0, type=int)
+@click.option('--duration', default=3, type=int)
 # @click.option('--days', default=1, type=int)
 def ctripref(days, duration):
 
@@ -38,6 +38,13 @@ def ctripref(days, duration):
 
 	newest = max(glob.iglob('output_Search_item_hr_*.csv'), key=os.path.getctime)
 	subprocess.call(['python', 'hc.py', '--filename', newest])
+
+	for i in range(3):
+		print('sleeping..')
+		time.sleep(1)
+
+	# newest = max(glob.iglob('output_Search_item_hr_*.csv'), key=os.path.getctime)
+	subprocess.call(['python', 'sendmail.py', '--filename', 'output_hotel_ref_*.csv', '--title', 'Ctrip_hotel_ref'])
 
 
 if __name__ == '__main__':

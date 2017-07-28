@@ -67,7 +67,7 @@ def ctripplus(filename, days):
 			hotel_ids.add(row['hotel_id'])
 
 	for counter, hotel_id in enumerate(hotel_ids):
-		pp.print('Counter: ' + str(counter))
+		pp.pprint('Counter: ' + str(counter))
 
 		from_date_plus_one = from_date + datetime.timedelta(days=1)
 
@@ -286,7 +286,7 @@ def ctripplus(filename, days):
 			k_max = len(ent.keys())
 
 	# keys = res[0].keys()
-	with open('output_Ctripplus_' + datetime.datetime.now().strftime('%y%m%d_%H%M') + '_' + str(days) + 'days.csv', 'w', encoding='utf-8') as output_file:
+	with open('output_Ctripplus_' + datetime.datetime.now().strftime('%y%m%d_%H%M') + '_' + str(days) + 'days.csv', 'w', newline='', encoding='utf-8') as output_file:
 		# dict_writer = csv.DictWriter(output_file, keys)
 		dict_writer = csv.DictWriter(output_file, keys_max)
 		dict_writer.writeheader()
