@@ -269,6 +269,8 @@ def hc(filename):
 				if HOTEL_CONFIRMED in booking['hotel_confirmation_status']:
 					# on request by Lily
 					booking['hotel_confirmation_#'] = 'Confirmed'
+				# elif TO_REGISTER in booking['hotel_confirmation_status']:
+				# 	continue
 				else:
 					booking['hotel_confirmation_#'] = hotel_ref_num
 			if hotel_ref_num != None:

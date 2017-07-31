@@ -18,6 +18,7 @@ top30
 secrets.json
 search_item_info*
 gta_hotel_keys
+remove_csv.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
