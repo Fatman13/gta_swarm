@@ -34,8 +34,8 @@ REF_AGENT = 'agent'
 @click.command()
 # @click.option('--file_name', default='top30')
 # @click.option('--from_d', default='2017-07-29')
-@click.option('--days', default=1, type=int)
-@click.option('--duration', default=0, type=int)
+@click.option('--days', default=0, type=int)
+@click.option('--duration', default=3, type=int)
 def booking_id(days, duration):
 
 	url = 'https://rbs.gta-travel.com/rbscnapi/RequestListenerServlet'

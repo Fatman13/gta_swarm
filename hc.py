@@ -24,7 +24,9 @@ from selenium.common.exceptions import WebDriverException
 from selenium.common.exceptions import TimeoutException
 from requests.exceptions import ConnectionError
 from requests.exceptions import ChunkedEncodingError
+from requests.exceptions import ReadTimeout
 
+TIME_OUT = 60
 
 hc_secret = None
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
@@ -45,9 +47,15 @@ HOTEL_REF = 'Hotel Ref:'
 def get_hotel_ref(booking_id, cookies):
 	hotel_ref_url = 'http://hotels.gta-travel.com/gcres/bookingDetail/section/' + str(booking_id) + '?cbsRevision=0'
 	try:
-		r = requests.get(hotel_ref_url, cookies=cookies, timeout=600)
+		r = requests.get(hotel_ref_url, cookies=cookies, timeout=TIME_OUT)
 	except ConnectionError as e:
 		print('fatal Connection error...r')
+		return None
+	except ReadTimeout as e:
+		print('fatal Read timeout error...r')
+		return None
+	except ChunkedEncodingError as e:
+		print('fatal Chunked encoding error...s')
 		return None
 	# print('parsing hotel ref...')
 
@@ -65,9 +73,15 @@ STATUS = 'Status:'
 def get_hotel_status(booking_id, cookies):
 	hotel_status_url = 'http://hotels.gta-travel.com/gcres/bookingHeader/show/' + str(booking_id) + '?cbsRevision=0'
 	try: 
-		r = requests.get(hotel_status_url, cookies=cookies, timeout=600)
+		r = requests.get(hotel_status_url, cookies=cookies, timeout=TIME_OUT)
 	except ConnectionError as e:
 		print('fatal Connection error...st')
+		return None
+	except ReadTimeout as e:
+		print('fatal Read timeout error...r')
+		return None
+	except ChunkedEncodingError as e:
+		print('fatal Chunked encoding error...s')
 		return None
 
 	soup = BeautifulSoup(r.text)
@@ -90,9 +104,15 @@ def get_hotel_email(hotel_id, cookies):
 				}
 	hotel_status_url = 'http://hotels.gta-travel.com/gcres/bookingContacts/list/' + str(hotel_id)
 	try: 
-		r = requests.get(hotel_status_url, params=payload, cookies=cookies, timeout=600)
+		r = requests.get(hotel_status_url, params=payload, cookies=cookies, timeout=TIME_OUT)
 	except ConnectionError as e:
 		print('fatal Connection error...st')
+		return None
+	except ReadTimeout as e:
+		print('fatal Read timeout error...r')
+		return None
+	except ChunkedEncodingError as e:
+		print('fatal Chunked encoding error...s')
 		return None
 
 	soup = BeautifulSoup(r.text)
@@ -160,7 +180,7 @@ CONFIRMED = 'Confirmed or Completed'
 HOTEL_CONFIRMED = 'Confirmed (registered )'
 
 @click.command()
-@click.option('--filename', default='output_Search_item_hr_170725_1109.csv')
+@click.option('--filename', default='output_Search_item_hr_170803_1223.csv')
 # @click.option('--days', default=15, type=int)
 def hc(filename):
 
@@ -226,12 +246,15 @@ def hc(filename):
 				'statuses': 'X',
 				'search': 'Search'}
 		try:
-			r = requests.get(search_url, params=payload, cookies=cookies, timeout=600)
+			r = requests.get(search_url, params=payload, cookies=cookies, timeout=TIME_OUT)
 		except ConnectionError as e:
 			print('fatal Connection error...s')
 			continue
 		except ChunkedEncodingError as e:
 			print('fatal Chunked encoding error...s')
+			continue
+		except ReadTimeout as e:
+			print('fatal Read timeout error...r')
 			continue
 		# print(r.text)
 

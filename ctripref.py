@@ -44,7 +44,7 @@ def ctripref(days, duration):
 		time.sleep(1)
 
 	# newest = max(glob.iglob('output_Search_item_hr_*.csv'), key=os.path.getctime)
-	subprocess.call(['python', 'sendmail.py', '--filename', 'output_hotel_ref_*.csv', '--title', 'Ctrip_hotel_ref'])
+	# subprocess.call(['python', 'sendmail.py', '--filename', 'output_hotel_ref_*.csv', '--title', 'Ctrip_hotel_ref'])
 
 
 if __name__ == '__main__':
