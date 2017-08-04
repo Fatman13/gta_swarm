@@ -12,6 +12,19 @@ This is a collection of python scripts for daily routines of testing GTA API and
 6. [ctriptrip.py](#ctriptrip) - A script using webdriver to download all rate plan of a specific hotel on ctrip
 7. [spplus.py](#spplus) - Dump a csv of dates when GTA hotel has a price 
 8. [elong.py](#elong) - Dump a csv of price differences between what GTA offers and the lowest by Elong
+9. [asp.py](#asp) - Dump rate plans of hotels as csv
+10. [sendmail.py](#) - An example of send email with attachment
+11. [as400.py](#) - An example of how you could connect to IBM AS400 with Python
+12. [l2b.py](#) - An example of how to parse html with Soup
+13. [haoqiao.py](#) - A crawler for extracting price from HQ
+14. [booking_href.py](#) - A crawler grabbing all hotel href from a starting search result url of booking
+15. [booking_room_facility.py](#) - A crawler for extracting room facilities from booking
+
+# Asp<a name="asp"></a>
+
+### Comment
+
+Could specify different client secret in `secrets.json`
 
 # Elong<a name="elong"></a>
 

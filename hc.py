@@ -26,7 +26,7 @@ from requests.exceptions import ConnectionError
 from requests.exceptions import ChunkedEncodingError
 from requests.exceptions import ReadTimeout
 
-TIME_OUT = 60
+TIME_OUT = 30
 
 hc_secret = None
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
@@ -287,9 +287,11 @@ def hc(filename):
 			booking['hotel_confirmation_status'] = get_hotel_status(booking_id, cookies)
 
 			hotel_ref_num = get_hotel_ref(booking_id, cookies)
+			# booking['hotel_confirmation_status'] = ''
 			# booking['hotel_confirmation_#'] = get_hotel_ref(booking_id, cookies)
 			if hotel_ref_num == None:
-				if HOTEL_CONFIRMED in booking['hotel_confirmation_status']:
+				# when internet is extremely slow booking['hotel_confirmation_status'] would be None sometimes
+				if booking['hotel_confirmation_status'] != None and HOTEL_CONFIRMED in booking['hotel_confirmation_status']:
 					# on request by Lily
 					booking['hotel_confirmation_#'] = 'Confirmed'
 				# elif TO_REGISTER in booking['hotel_confirmation_status']:

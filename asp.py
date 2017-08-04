@@ -26,8 +26,8 @@ def daterange(start_date, end_date):
 
 @click.command()
 @click.option('--file_name', default='gta_hotel_keys')
-@click.option('--from_d', default='2017-08-03')
-@click.option('--to_d', default='2017-08-04')
+@click.option('--from_d', default='2017-09-03')
+@click.option('--to_d', default='2017-09-04')
 @click.option('--client', default='ctrip')
 def asp(file_name, from_d, to_d, client):
 
@@ -43,12 +43,17 @@ def asp(file_name, from_d, to_d, client):
 
 	# pp.pprint('? ' + str(skip))
 
+	hotel_ids = set()
 	hotel_codes = []
 	with open(file_name, 'r') as file:
 		for line in file:
 			# pp.pprint(line)
+			if line in hotel_ids:
+				continue
 			city_code, item_code = line.rstrip().split('_')
 			hotel_codes.append(dict([('city_code', city_code), ('item_code', item_code), ('missing_price', [])]))
+
+			hotel_ids.add(line)
 
 	agent_secret = None
 	with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
