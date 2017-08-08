@@ -12,6 +12,7 @@ import os
 # from random import sample
 import random
 # import logging
+import json
 
 def validate_d(date_text):
 	try:
@@ -31,12 +32,17 @@ REF_API = 'api'
 REF_CLIENT = 'client'
 REF_AGENT = 'agent'
 
+TYPE_DEPARTURE = 'departure'
+TYPE_CREATION = 'creation'
+
 @click.command()
 # @click.option('--file_name', default='top30')
 # @click.option('--from_d', default='2017-07-29')
 @click.option('--days', default=0, type=int)
 @click.option('--duration', default=3, type=int)
-def booking_id(days, duration):
+@click.option('--client', default='lefei')
+@click.option('--d_type', default=TYPE_CREATION)
+def booking_id(days, duration, client, d_type):
 
 	url = 'https://rbs.gta-travel.com/rbscnapi/RequestListenerServlet'
 	pp = pprint
@@ -63,10 +69,18 @@ def booking_id(days, duration):
 	# 		city_code, item_code = line.rstrip().split('_')
 	# 		hotel_codes.append(dict([('city_code', city_code), ('item_code', item_code), ('missing_price', [])]))
 
+	agent_secret = None
+	with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
+		agent_secret = (json.load(data_file))[client]
 
 	search_tree = ET.parse(os.path.join(os.getcwd(), 'SearchBookingRequest.xml'))
+	search_tree.find('.//RequestorID').set('Client', agent_secret['id'])
+	search_tree.find('.//RequestorID').set('EMailAddress', agent_secret['email'])
+	search_tree.find('.//RequestorID').set('Password', agent_secret['password'])
+
 	search_tree.find('.//FromDate').text = from_date.strftime('%Y-%m-%d')
 	search_tree.find('.//ToDate').text = to_date.strftime('%Y-%m-%d')
+	search_tree.find('.//BookingDateRange').set('DateType', d_type)
 
 	try:
 		r = requests.post(url, data=ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml'), timeout=600)
@@ -78,6 +92,9 @@ def booking_id(days, duration):
 
 	for booking in r_tree.find('.//Bookings'):
 		entry = {}
+		entry['client_booking_id'] = entry['agent_booking_id'] = entry['gta_api_booking_id'] = ''
+		entry['booking_status'] = entry['booking_creation_date'] = entry['booking_departure_date'] = ''
+		entry['booking_name'] = entry['booking_net_price'] = entry['booking_currency'] = ''
 
 		for booking_ref in booking.find('.//BookingReferences'):
 			ref_type = booking_ref.get('ReferenceSource')
@@ -100,7 +117,7 @@ def booking_id(days, duration):
 	# keys = res[0].keys()
 	keys = res[0].keys()
 	# with open('output_SearchPrice_' + date.today().strftime('%Y_%m_%d') + '.csv', 'w', encoding='utf-8') as output_file:
-	with open('output_Search_booking_id_' + from_date.strftime('%y%m%d') + '_' + datetime.datetime.now().strftime('%H%M') + '_' + str(duration) + 'd.csv', 'w', encoding='utf-8') as output_file:
+	with open('output_Search_booking_id_' + from_date.strftime('%y%m%d') + '_' + datetime.datetime.now().strftime('%H%M') + '_' + str(duration) + 'd.csv', 'w', newline='', encoding='utf-8') as output_file:
 		dict_writer = csv.DictWriter(output_file, keys)
 		dict_writer.writeheader()
 		dict_writer.writerows(res)

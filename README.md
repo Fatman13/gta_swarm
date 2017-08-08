@@ -18,7 +18,17 @@ This is a collection of python scripts for daily routines of testing GTA API and
 12. [l2b.py](#) - An example of how to parse html with Soup
 13. [haoqiao.py](#) - A crawler for extracting price from HQ
 14. [booking_href.py](#) - A crawler grabbing all hotel href from a starting search result url of booking
+14. [booking.py](#) - A crawler grabbing all hotel facilites from booking
 15. [booking_room_facility.py](#) - A crawler for extracting room facilities from booking
+16. [search_info.py](#) - Search GTA Item Information API
+17. [ctripplus.py](#) - Compare GTA price and Ctrip price on room type level
+18. [booking_id.py](#) - Search booking and dump booking id
+19. [search_item_hr.py](#) - Search booking item and get hotel reference #
+20. [hc.py](#) - Crawl GC and get hotel comfirmation #
+21. [ctriproom.py](#) - Crawl Ctrip and get a list of Ctrip room types
+22. [asp.py](#) - Fetch a list of rate plans from GTA API
+23. [ctripmultiplus.py](#) - A shortcut for `ctripplus.py`
+24. [ctripref.py](#) - A shortcut for running `booking_id.py`, `search_item_hr.py` and `hc.py`
 
 # Asp<a name="asp"></a>
 

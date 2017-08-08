@@ -23,7 +23,7 @@ import time
 # @click.option('--days', default=1, type=int)
 def ctripref(days, duration):
 
-	subprocess.call(['python', 'booking_id.py', '--days', str(days), '--duration', str(duration)])
+	subprocess.call(['python', 'booking_id.py', '--days', str(days), '--duration', str(duration), '--client', 'ctrip', '--type', 'departure'])
 
 	for i in range(3):
 		print('sleeping..')

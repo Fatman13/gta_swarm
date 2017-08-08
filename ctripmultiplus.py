@@ -18,13 +18,14 @@ import glob
 import time
 
 @click.command()
-@click.option('--days', default=20, type=int)
+@click.option('--days', default=10, type=int)
+@click.option('--span', default=5, type=int)
 # @click.option('--duration', default=3, type=int)
 # @click.option('--days', default=1, type=int)
-def ctripmultiplus(days):
+def ctripmultiplus(days, span):
 
 	start_days = days
-	for i in range(4):
+	for i in range(span):
 		subprocess.call(['python', 'ctripplus.py', '--days', str(start_days + i*10)])
 
 		for i in range(3):
