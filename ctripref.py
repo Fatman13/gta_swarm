@@ -2,20 +2,21 @@
 # coding=utf-8
 
 import pprint
-import csv
+# import csv
 import click 
-import requests
-import datetime as datetime
-from datetime import date
-from xml.etree import ElementTree as ET
+# import requests
+# import datetime as datetime
+# from datetime import date
+# from xml.etree import ElementTree as ET
 import os
 # from random import sample
-import random
-import json
+# import random
+# import json
 # import logging
 import subprocess
 import glob
 import time
+import sys
 
 @click.command()
 @click.option('--days', default=0, type=int)
@@ -46,6 +47,15 @@ def ctripref(days, duration):
 	# newest = max(glob.iglob('output_Search_item_hr_*.csv'), key=os.path.getctime)
 	# subprocess.call(['python', 'sendmail.py', '--filename', 'output_hotel_ref_*.csv', '--title', 'Ctrip_hotel_ref'])
 
+	while True:
+		sys.stdout.write("Would you like to proceed to call Ctrip's update hotel res no API? [Y/N]")
+		choice = input().lower()
+		if choice == 'y' or choice == 'yes':
+			break
+		if choice == 'n' or choice == 'no':
+			return
+
+	
 
 if __name__ == '__main__':
 	ctripref()

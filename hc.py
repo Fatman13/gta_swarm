@@ -292,8 +292,8 @@ def hc(filename):
 			if hotel_ref_num == None:
 				# when internet is extremely slow booking['hotel_confirmation_status'] would be None sometimes
 				if booking['hotel_confirmation_status'] != None and HOTEL_CONFIRMED in booking['hotel_confirmation_status']:
-					# on request by Lily
-					booking['hotel_confirmation_#'] = 'Confirmed'
+					# ctrip doesn't like this...
+					# booking['hotel_confirmation_#'] = 'Confirmed'
 				# elif TO_REGISTER in booking['hotel_confirmation_status']:
 				# 	continue
 				else:
