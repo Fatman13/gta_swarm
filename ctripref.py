@@ -20,11 +20,12 @@ import sys
 
 @click.command()
 @click.option('--days', default=0, type=int)
-@click.option('--duration', default=3, type=int)
+@click.option('--duration', default=0, type=int)
 # @click.option('--days', default=1, type=int)
 def ctripref(days, duration):
 
-	subprocess.call(['python', 'booking_id.py', '--days', str(days), '--duration', str(duration), '--client', 'ctrip', '--type', 'departure'])
+	# python booking_id.py --days 0 --duration 0 --client ctrip --d_type departure
+	subprocess.call(['python', 'booking_id.py', '--days', str(days), '--duration', str(duration), '--client', 'ctrip', '--d_type', 'departure'])
 
 	for i in range(3):
 		print('sleeping..')
@@ -47,15 +48,18 @@ def ctripref(days, duration):
 	# newest = max(glob.iglob('output_Search_item_hr_*.csv'), key=os.path.getctime)
 	# subprocess.call(['python', 'sendmail.py', '--filename', 'output_hotel_ref_*.csv', '--title', 'Ctrip_hotel_ref'])
 
+	newest = max(glob.iglob('output_hotel_ref_*.csv'), key=os.path.getctime)
+
 	while True:
-		sys.stdout.write("Would you like to proceed to call Ctrip's update hotel res no API? [Y/N]")
+		sys.stdout.write("Would you like to proceed to call Ctrip's update hotel res no API? " + newest + " [Y/N]")
 		choice = input().lower()
 		if choice == 'y' or choice == 'yes':
 			break
 		if choice == 'n' or choice == 'no':
 			return
 
-	
+	subprocess.call(['python', 'ctrip_update_res_no.py', '--filename', newest])
+			
 
 if __name__ == '__main__':
 	ctripref()
