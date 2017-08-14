@@ -31,14 +31,42 @@ def daterange(start_date, end_date):
 # with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
 # 	booking_id_secret = (json.load(data_file))['booking_id']
 
+def isEnglish(s):
+	try:
+		s.encode(encoding='utf-8').decode('ascii')
+	except UnicodeDecodeError:
+		return False
+	else:
+		return True
+
+def isGarbage(s):
+	if s.lower() in ['ok', 'nono', 'ng', 'll', 'stp', 'wichuta', 'okay', 'view', 'vas', 'rt', 'kb', 'chalee', 'im', 'not available'  ]:
+		return True
+	return False
+
+def hasNumbers(s):
+	return any(char.isdigit() for char in s)
+
+def hasDates(s):
+	if any( month in s.lower() for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'])
+		return True
+	return False
+
+def isValid(s):
+	# if isEnglish(s) and not isGarbage(s):
+	if isEnglish(s) and hasNumbers(s) and not hasDates(s):
+		return True
+	return False
+
 REF_API = 'api'
 REF_CLIENT = 'client'
 REF_AGENT = 'agent'
 
 CONFIRMED = 'Confirmed or Completed'
+CANCELLED = 'Cancelled (to register)'
 
 @click.command()
-@click.option('--filename', default='output_hotel_ref_test.csv')
+@click.option('--filename', default='output_hotel_ref_170811_1736.csv')
 # @click.option('--client', default='ctrip')
 # @click.option('--days', default=1, type=int)
 def ctrip_update_res_no(filename):
@@ -89,10 +117,18 @@ def ctrip_update_res_no(filename):
 				'SOAPAction': '"http://www.opentravel.org/OTA/2003/05/Request"' }
 
 	for counter, booking in enumerate(bookings):
-		pp.pprint('Searching booking id: ' + str(counter) + ': ' + booking['gta_api_booking_id'])
+		pp.pprint('Updating booking id to Ctrip: ' + str(counter) + ': ' + booking['gta_api_booking_id'])
 
 		if booking['hotel_confirmation_#'] == None or booking['hotel_confirmation_#'] == '':
 			print('No booking confirmation #.. skipping..')
+			continue
+
+		if booking['hotel_confirmation_status'] != None and booking['hotel_confirmation_status'] == CANCELLED:
+			print('Booking canceled .. skipping..')
+			continue
+
+		if not isValid(booking['hotel_confirmation_#']):
+			print('Warning: Confirmation # not valid.. ' + booking['hotel_confirmation_#'])
 			continue
 
 		for res_id in search_tree.find('.//{http://www.opentravel.org/OTA/2003/05}HotelReservationIDs'):
@@ -111,22 +147,28 @@ def ctrip_update_res_no(filename):
 		except OSError:
 			pp.pprint('Error: OSError.. Searching has stopped..')
 			booking['Ctrip_update_API'] = 'Connection Error: OSError'
+			res.append(booking)
+			continue
 		except ConnectionError as e:
 			print('fatal Connection error...r')
 			booking['Ctrip_update_API'] = 'Connection Error: ConnectionError'
+			res.append(booking)
+			continue
 		except ReadTimeout as e:
 			print('fatal Read timeout error...r')
 			booking['Ctrip_update_API'] = 'Connection Error: ReadTimeout'
+			res.append(booking)
+			continue
 		except ChunkedEncodingError as e:
 			print('fatal Chunked encoding error...s')
-			booking['Ctrip_update_API'] = 'Connection Error: ChunkedEncodingError'	
-		else:
+			booking['Ctrip_update_API'] = 'Connection Error: ChunkedEncodingError'
 			res.append(booking)
 			continue
 
 		r_tree = ET.fromstring(r.text)
 
-		print(r.text)
+		# pp.pprint('r_text: ' + r.text)
+		# pp.pprint('r: ' + r)
 
 		if r_tree == None:
 			booking['Ctrip_update_API'] = 'No result from Ctrip API'

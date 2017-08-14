@@ -17,6 +17,8 @@ import subprocess
 import glob
 import time
 import sys
+import datetime
+import re
 
 @click.command()
 @click.option('--days', default=0, type=int)
@@ -50,6 +52,17 @@ def ctripref(days, duration):
 
 	newest = max(glob.iglob('output_hotel_ref_*.csv'), key=os.path.getctime)
 
+	today_date = datetime.datetime.now().strftime('%y%m%d')
+	try:
+		newest_date = re.search('output_hotel_ref_(\d+)', newest).group(1)
+	except AttributeError:
+		newest_date = ''
+	if newest_date != today_date:
+		print('Error: newest date != today date.. mannual intervention needed..')
+		return
+
+	print('newest date: ' + newest_date)
+
 	while True:
 		sys.stdout.write("Would you like to proceed to call Ctrip's update hotel res no API? " + newest + " [Y/N]")
 		choice = input().lower()
@@ -59,7 +72,7 @@ def ctripref(days, duration):
 			return
 
 	subprocess.call(['python', 'ctrip_update_res_no.py', '--filename', newest])
-			
+
 
 if __name__ == '__main__':
 	ctripref()

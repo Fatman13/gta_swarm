@@ -36,7 +36,9 @@ def check_exists_by_css_selector(element, selector):
 	return True
 
 @click.command()
-def booking():
+@click.option('--filename', default='blabla.csv')
+@click.option('--city', default='sh')
+def booking(filename, city):
 	pp = pprint
 	res = []
 
@@ -55,17 +57,22 @@ def booking():
 	# with open('output_booking_hotel_href_sapporo.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_href_nagoya.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_href_kobe.csv', encoding='utf-8-sig') as csvfile:
-	with open('output_booking_hotel_href_fukuoka.csv', encoding='utf-8-sig') as csvfile:
+	# with open('output_booking_hotel_href_fukuoka.csv', encoding='utf-8-sig') as csvfile:
 	# with open('output_booking_hotel_href_phuket.csv', encoding='utf-8-sig') as csvfile:
+	with open(filename, encoding='utf-8-sig') as csvfile:
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			if row['hotel_href']:
 				url = row['hotel_href']
 
 				driver.get(url)
-				element = WebDriverWait(driver, 20).until(
-					lambda driver: driver.execute_script("return $.active == 0")
-				)
+				try:
+					element = WebDriverWait(driver, 20).until(
+						lambda driver: driver.execute_script("return $.active == 0")
+					)
+				except WebDriverException as e:
+					print('Error: failed to get hotel... WebDriverException..')
+					continue
 				time.sleep(wait_m)
 				# gta_keys.append(row['hotel_href'])
 
@@ -91,10 +98,8 @@ def booking():
 							# entry[section_name].append(str(li.text))
 							entry[str(li.text)] = 'Y'
 				# pp.pprint(entry)
-
 				entry['hotel_href'] = url
-				res.append(entry)
-				
+				res.append(entry)			
 
 	driver.quit()
 
@@ -111,12 +116,11 @@ def booking():
 
 	# 
 	keys = res[0].keys()
-	with open('output_hotel_facilities_' + datetime.datetime.now().strftime('%y%m%d_%H%M') + '.csv', 'w', encoding='utf-8') as output_file:
+	with open('output_hotel_facilities_' + city + datetime.datetime.now().strftime('_%y%m%d_%H%M') + '.csv', 'w', newline='', encoding='utf-8') as output_file:
 		# dict_writer = csv.DictWriter(output_file, keys)
 		dict_writer = csv.DictWriter(output_file, field_names)
 		dict_writer.writeheader()
 		dict_writer.writerows(res)
-	
 
 if __name__ == '__main__':
 	booking()

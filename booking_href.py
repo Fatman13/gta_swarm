@@ -17,6 +17,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotVisibleException   
 from selenium.common.exceptions import StaleElementReferenceException   
 from selenium.common.exceptions import WebDriverException   
+from selenium.common.exceptions import TimeoutException   
 
 def validate_d(date_text):
 	try:
@@ -30,7 +31,9 @@ def daterange(start_date, end_date):
 
 
 @click.command()
-def booking_href():
+@click.option('--page', default=23, type=int)
+@click.option('--url', default='https://www.booking.com/searchresults.html?aid=304142&label=gen173nr-1FCAEoggJCAlhYSDNiBW5vcmVmaDGIAQGYATK4AQbIAQ_YAQHoAQH4AQuSAgF5qAID&sid=c24f665d504aac0a9c235ce5f00da065&checkin_month=11&checkin_monthday=13&checkin_year=2017&checkout_month=11&checkout_monthday=14&checkout_year=2017&class_interval=1&group_adults=2&group_children=0&label_click=undef&lsf=class%7C5%7C22&nflt=ht_id%3D204%3Bclass%3D3%3Bclass%3D4%3Bclass%3D5%3B&no_rooms=1&region=5757&room1=A%2CA&sb_price_type=total&src=searchresults&ss=Pattaya&ssb=empty&ssne=Pattaya&ssne_untouched=Pattaya&track_BHKF=1&unchecked_filter=class&unchecked_filter=class&unchecked_filter=class&unchecked_filter=hoteltype&rows=15')
+def booking_href(page, url):
 	pp = pprint
 	res = []
 
@@ -63,8 +66,10 @@ def booking_href():
 	# 普吉岛
 	# url = 'https://www.booking.com/searchresults.zh-cn.html?label=gen173nr-1FCAEoggJCAlhYSDNiBW5vcmVmaDGIAQGYATG4AQbIAQ_YAQHoAQH4AQKSAgF5qAID&lang=zh-cn&sid=455fb47c61b5bc889b31eedf9a24406d&track_cisspo=1&sb=1&src=index&src_elem=sb&error_url=https%3A%2F%2Fwww.booking.com%2Findex.zh-cn.html%3Flabel%3Dgen173nr-1FCAEoggJCAlhYSDNiBW5vcmVmaDGIAQGYATG4AQbIAQ_YAQHoAQH4AQKSAgF5qAID%3Bsid%3D455fb47c61b5bc889b31eedf9a24406d%3Bsb_price_type%3Dtotal%26%3B&ss=%E6%99%AE%E5%90%89%E5%B2%9B346%E5%AE%BE%E9%A6%86%2C+%E6%99%AE%E5%90%89%E9%95%87%2C+%E6%99%AE%E5%90%89%E5%BA%9C%2C+%E6%B3%B0%E5%9B%BD&ssne=%E7%A5%9E%E6%88%B7&ssne_untouched=%E7%A5%9E%E6%88%B7&checkin_year=2017&checkin_month=7&checkin_monthday=18&checkout_year=2017&checkout_month=7&checkout_monthday=19&room1=A%2CA&group_adults=2&group_children=0&no_rooms=1&ss_raw=%E6%99%AE%E5%90%89%E5%B2%9B&ac_position=4&ac_langcode=zh&dest_id=431516&dest_type=hotel&search_pageview_id=d6f61ce153620037&search_selected=true&search_pageview_id=d6f61ce153620037&ac_suggestion_list_length=5&ac_suggestion_theme_list_length=0'
 	# 普吉岛2
-	url = 'https://www.booking.com/searchresults.zh-cn.html?label=gen173nr-1FCAEoggJCAlhYSDNiBW5vcmVmaDGIAQGYATK4AQbIAQ_YAQHoAQH4AQuSAgF5qAID&sid=455fb47c61b5bc889b31eedf9a24406d&checkin_month=7&checkin_monthday=26&checkin_year=2017&checkout_month=7&checkout_monthday=27&checkout_year=2017&class_interval=1&dest_id=-3253342&dest_type=city&dtdisc=0&group_adults=2&group_children=0&inac=0&index_postcard=0&label_click=undef&no_rooms=1&postcard=0&raw_dest_type=city&room1=A%2CA&sb_price_type=total&search_selected=1&src=index&ss=%E6%99%AE%E5%90%89%E9%95%87%2C%20%E6%99%AE%E5%90%89%E5%BA%9C%2C%20%E6%B3%B0%E5%9B%BD&ss_all=0&ss_raw=%E6%99%AE%E5%90%89&ssb=empty&sshis=0&ssne_untouched=%E6%99%AE%E5%90%89%E9%95%87&nflt=ht_id%3D204%3B&lsf=ht_id%7C204%7C79&unchecked_filter=hoteltype'
-	pages = 3
+	# url = 'https://www.booking.com/searchresults.zh-cn.html?label=gen173nr-1FCAEoggJCAlhYSDNiBW5vcmVmaDGIAQGYATK4AQbIAQ_YAQHoAQH4AQuSAgF5qAID&sid=455fb47c61b5bc889b31eedf9a24406d&checkin_month=7&checkin_monthday=26&checkin_year=2017&checkout_month=7&checkout_monthday=27&checkout_year=2017&class_interval=1&dest_id=-3253342&dest_type=city&dtdisc=0&group_adults=2&group_children=0&inac=0&index_postcard=0&label_click=undef&no_rooms=1&postcard=0&raw_dest_type=city&room1=A%2CA&sb_price_type=total&search_selected=1&src=index&ss=%E6%99%AE%E5%90%89%E9%95%87%2C%20%E6%99%AE%E5%90%89%E5%BA%9C%2C%20%E6%B3%B0%E5%9B%BD&ss_all=0&ss_raw=%E6%99%AE%E5%90%89&ssb=empty&sshis=0&ssne_untouched=%E6%99%AE%E5%90%89%E9%95%87&nflt=ht_id%3D204%3B&lsf=ht_id%7C204%7C79&unchecked_filter=hoteltype'
+	# pattaya
+	# url = 'https://www.booking.com/searchresults.html?aid=304142&label=gen173nr-1FCAEoggJCAlhYSDNiBW5vcmVmaDGIAQGYATK4AQbIAQ_YAQHoAQH4AQuSAgF5qAID&sid=c24f665d504aac0a9c235ce5f00da065&checkin_month=11&checkin_monthday=13&checkin_year=2017&checkout_month=11&checkout_monthday=14&checkout_year=2017&class_interval=1&group_adults=2&group_children=0&label_click=undef&lsf=class%7C5%7C22&nflt=ht_id%3D204%3Bclass%3D3%3Bclass%3D4%3Bclass%3D5%3B&no_rooms=1&region=5757&room1=A%2CA&sb_price_type=total&src=searchresults&ss=Pattaya&ssb=empty&ssne=Pattaya&ssne_untouched=Pattaya&track_BHKF=1&unchecked_filter=class&unchecked_filter=class&unchecked_filter=class&unchecked_filter=hoteltype&rows=15'
+	pages = page
 
 	driver.get(url)
 
@@ -89,23 +94,25 @@ def booking_href():
 		i_cur = pages.index(page_cur)
 
 		# pages[i+1].click()
-		pages[i_cur+1].click()
-		element = WebDriverWait(driver, 20).until(
-			lambda driver: driver.execute_script("return $.active == 0")
+		try:
+			pages[i_cur+1].click()
+			element = WebDriverWait(driver, 20).until(
+				lambda driver: driver.execute_script("return $.active == 0")
 			)
-		time.sleep(wait_m)
+		except TimeoutException as e:
+			print('Error: Time out exception not handled..')
+			break
 		
-
+		time.sleep(wait_m)
 
 	driver.quit()
 
 	# 
 	keys = res[0].keys()
-	with open('output_booking_hotel_href.csv', 'w', encoding='utf-8') as output_file:
+	with open('output_booking_hotel_href' + datetime.datetime.now().strftime('_%y%m%d_%H%M') + '.csv', 'w', newline='', encoding='utf-8') as output_file:
 		dict_writer = csv.DictWriter(output_file, keys)
 		dict_writer.writeheader()
 		dict_writer.writerows(res)
 	
-
 if __name__ == '__main__':
 	booking_href()
