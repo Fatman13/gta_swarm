@@ -37,8 +37,8 @@ def booking_hotel_fa():
 			entry['url'] = row['url']				
 			hotels.append(entry)
 
-	for hotel in hotels: 
-		
+	for counter, hotel in enumerate(hotels): 
+
 		if hotel['page'] == None or hotel['url'] == None:
 			print('Warning: no page or url in csv..')
 			continue
@@ -47,7 +47,7 @@ def booking_hotel_fa():
 		subprocess.call(['python', 'booking_href.py', '--page', str(hotel['page']), '--url', str(hotel['url'])])
 
 		for i in range(3):
-			print('sleeping..')
+			print('sleeping.. ' + str(counter) )
 			time.sleep(1)
 
 		newest = max(glob.iglob('output_booking_hotel_href*.csv'), key=os.path.getctime)

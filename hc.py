@@ -197,25 +197,25 @@ def hc(filename):
 		reader = csv.DictReader(csvfile)
 		for row in reader:
 			# pp.pprint(row['hotel_id'])
-			if row['gta_api_booking_id'] not in ids:
-				entry = dict()
-				entry['client_booking_id'] = row['client_booking_id']
-				entry['agent_booking_id'] = row['agent_booking_id']
-				entry['gta_api_booking_id'] = row['gta_api_booking_id']
-				entry['booking_status'] = row['booking_status']
-				entry['booking_creation_date'] = row['booking_creation_date']
-				entry['booking_departure_date'] = row['booking_departure_date']
-				entry['booking_name'] = row['booking_name']
-				entry['booking_net_price'] = row['booking_net_price']
-				entry['booking_currency'] = row['booking_currency']
-				entry['hotel_confirmation_#'] = ''
-				entry['hotel_confirmation_status'] = ''
-				if 'hotel_confirmation_#' in row:
-					entry['hotel_confirmation_#'] = row['hotel_confirmation_#']
-				if 'hotel_confirmation_status' in row:
-					entry['hotel_confirmation_status'] = row['hotel_confirmation_status']
-				bookings.append(entry)
-			ids.add(row['gta_api_booking_id'])
+			# if row['gta_api_booking_id'] not in ids:
+			entry = dict()
+			entry['client_booking_id'] = row['client_booking_id']
+			entry['agent_booking_id'] = row['agent_booking_id']
+			entry['gta_api_booking_id'] = row['gta_api_booking_id']
+			entry['booking_status'] = row['booking_status']
+			entry['booking_creation_date'] = row['booking_creation_date']
+			entry['booking_departure_date'] = row['booking_departure_date']
+			entry['booking_name'] = row['booking_name']
+			entry['booking_net_price'] = row['booking_net_price']
+			entry['booking_currency'] = row['booking_currency']
+			entry['hotel_confirmation_#'] = ''
+			entry['hotel_confirmation_status'] = ''
+			if 'hotel_confirmation_#' in row:
+				entry['hotel_confirmation_#'] = row['hotel_confirmation_#']
+			if 'hotel_confirmation_status' in row:
+				entry['hotel_confirmation_status'] = row['hotel_confirmation_status']
+			bookings.append(entry)
+			# ids.add(row['gta_api_booking_id'])
 
 	# print(bookings)
 

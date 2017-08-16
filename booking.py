@@ -17,6 +17,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotVisibleException   
 from selenium.common.exceptions import StaleElementReferenceException   
 from selenium.common.exceptions import WebDriverException   
+from selenium.common.exceptions import TimeoutException
 
 def validate_d(date_text):
 	try:
@@ -36,8 +37,8 @@ def check_exists_by_css_selector(element, selector):
 	return True
 
 @click.command()
-@click.option('--filename', default='blabla.csv')
-@click.option('--city', default='sh')
+@click.option('--filename', default='output_booking_hotel_href_test15.csv')
+@click.option('--city', default='test_city')
 def booking(filename, city):
 	pp = pprint
 	res = []
@@ -61,11 +62,15 @@ def booking(filename, city):
 	# with open('output_booking_hotel_href_phuket.csv', encoding='utf-8-sig') as csvfile:
 	with open(filename, encoding='utf-8-sig') as csvfile:
 		reader = csv.DictReader(csvfile)
-		for row in reader:
+		for counter, row in enumerate(reader):
 			if row['hotel_href']:
 				url = row['hotel_href']
 
-				driver.get(url)
+				try:
+					driver.get(url)
+				except TimeoutException as e:
+					print('Error: time out exception..')
+					continue
 				try:
 					element = WebDriverWait(driver, 20).until(
 						lambda driver: driver.execute_script("return $.active == 0")
@@ -79,6 +84,10 @@ def booking(filename, city):
 				sections = driver.find_elements_by_css_selector('div.facilitiesChecklistSection')
 				entry = {}
 				entry['hotel_name'] = driver.find_element_by_css_selector('h2#hp_hotel_name').text
+				print('hotel name: ' + str(counter) + ': ' + str(entry['hotel_name']))
+				if entry['hotel_name'] == None or entry['hotel_name'] == '':
+					entry['hotel_name'] = driver.find_element_by_css_selector('h1.b-crumb__hp-current').text
+					print('hotel name 2nd try: ' + str(counter) + ': ' + str(entry['hotel_name']))
 				entry['hotel_star'] = driver.find_element_by_css_selector('i.bk-icon-wrapper.bk-icon-stars.star_track').get_attribute('title')
 
 				# pp.pprint(entry['hotel_name'])
@@ -113,6 +122,10 @@ def booking(filename, city):
 	# 	if len(ent.keys()) > k_max:
 	# 		keys_max = ent.keys()
 	# 		k_max = len(ent.keys())
+
+	if not res:
+		print('Res empty.. ')
+		return
 
 	# 
 	keys = res[0].keys()

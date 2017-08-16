@@ -48,15 +48,16 @@ def hasNumbers(s):
 	return any(char.isdigit() for char in s)
 
 def hasDates(s):
-	if any( month in s.lower() for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'])
+	if any( month in s.lower() for month in ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']):
 		return True
 	return False
 
-def isValid(s):
-	# if isEnglish(s) and not isGarbage(s):
-	if isEnglish(s) and hasNumbers(s) and not hasDates(s):
-		return True
-	return False
+def isValid(hc):
+	for s in hc:
+		# if isEnglish(s) and not isGarbage(s):
+		if not isEnglish(s) or not hasNumbers(s) or hasDates(s):
+			return False
+	return True
 
 REF_API = 'api'
 REF_CLIENT = 'client'
@@ -66,7 +67,7 @@ CONFIRMED = 'Confirmed or Completed'
 CANCELLED = 'Cancelled (to register)'
 
 @click.command()
-@click.option('--filename', default='output_hotel_ref_170811_1736.csv')
+@click.option('--filename', default='output_hotel_ref_170815_1139.csv')
 # @click.option('--client', default='ctrip')
 # @click.option('--days', default=1, type=int)
 def ctrip_update_res_no(filename):
@@ -96,19 +97,27 @@ def ctrip_update_res_no(filename):
 				entry['booking_name'] = row['booking_name']
 				entry['booking_net_price'] = row['booking_net_price']
 				entry['booking_currency'] = row['booking_currency']
-				entry['hotel_confirmation_#'] = ''
+				# confirmation_# list
+				entry['hotel_confirmation_#'] = []
 				entry['hotel_confirmation_status'] = ''
 				entry['hotel_email'] = ''
 				if 'hotel_email' in row:
 					entry['hotel_email'] = row['hotel_email']
 				if 'hotel_confirmation_#' in row:
-					entry['hotel_confirmation_#'] = row['hotel_confirmation_#']
+					entry['hotel_confirmation_#'].append(row['hotel_confirmation_#'])
 				if 'hotel_confirmation_status' in row:
 					entry['hotel_confirmation_status'] = row['hotel_confirmation_status']
 				# new 
 				entry['Ctrip_update_API'] = ''
-
+				# last_entry = entry
 				bookings.append(entry)
+			else:
+				booking_entry = None
+				for booking in bookings:
+					if booking['gta_api_booking_id'] == row['gta_api_booking_id']:
+						booking_entry = booking
+				booking_entry['hotel_confirmation_#'].append(row['hotel_confirmation_#'])
+
 			ids.add(row['gta_api_booking_id'])
 
 	search_tree = ET.parse(os.path.join(os.getcwd(), 'CtripHotelResNumUpdateRQ.xml'))
@@ -119,7 +128,11 @@ def ctrip_update_res_no(filename):
 	for counter, booking in enumerate(bookings):
 		pp.pprint('Updating booking id to Ctrip: ' + str(counter) + ': ' + booking['gta_api_booking_id'])
 
-		if booking['hotel_confirmation_#'] == None or booking['hotel_confirmation_#'] == '':
+		if len(booking['hotel_confirmation_#']) == 0:
+			print('booking confirmation # len == 0 .. skipping..')
+			continue
+
+		if any( hc == None for hc in booking['hotel_confirmation_#']) or any( hc == '' for hc in booking['hotel_confirmation_#']):
 			print('No booking confirmation #.. skipping..')
 			continue
 
@@ -128,7 +141,7 @@ def ctrip_update_res_no(filename):
 			continue
 
 		if not isValid(booking['hotel_confirmation_#']):
-			print('Warning: Confirmation # not valid.. ' + booking['hotel_confirmation_#'])
+			print('Warning: Confirmation # not valid.. ' + str(booking['hotel_confirmation_#']))
 			continue
 
 		for res_id in search_tree.find('.//{http://www.opentravel.org/OTA/2003/05}HotelReservationIDs'):
@@ -139,8 +152,8 @@ def ctrip_update_res_no(filename):
 				# print(res_id.get('ResID_Value'))
 				res_id.set('ResID_Value', booking['gta_api_booking_id'].replace('041/', ''))
 			if res_id.get('ResID_Type') == '504':
-				print(res_id.get('ResID_Value'))
-				res_id.set('ResID_Value', booking['hotel_confirmation_#'])
+				res_id.set('ResID_Value', ','.join(booking['hotel_confirmation_#']))
+				print(res_id.get('ResID_Value'))				
 
 		try:
 			r = requests.post(url, data=ET.tostring(search_tree.getroot(), encoding='UTF-8'), headers=headers, timeout=60)
@@ -180,7 +193,7 @@ def ctrip_update_res_no(filename):
 			booking['Ctrip_update_API'] = 'Success'
 			print('Update success...')
 		if r_tree.find('.//{http://www.opentravel.org/OTA/2003/05}Errors') != None:
-			booking['Ctrip_update_API'] = 'Errors'
+			booking['Ctrip_update_API'] = r.text
 			print('Update errors...')
 
 		res.append(booking)
