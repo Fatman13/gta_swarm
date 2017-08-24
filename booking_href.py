@@ -43,7 +43,7 @@ def booking_href(page, url):
 	# driver = webdriver.Ie()
 
 	wait_s = 3
-	wait_m = 10
+	wait_m = 6
 	wait_l = 15
 
 	# paris
@@ -71,15 +71,28 @@ def booking_href(page, url):
 	# url = 'https://www.booking.com/searchresults.html?aid=304142&label=gen173nr-1FCAEoggJCAlhYSDNiBW5vcmVmaDGIAQGYATK4AQbIAQ_YAQHoAQH4AQuSAgF5qAID&sid=c24f665d504aac0a9c235ce5f00da065&checkin_month=11&checkin_monthday=13&checkin_year=2017&checkout_month=11&checkout_monthday=14&checkout_year=2017&class_interval=1&group_adults=2&group_children=0&label_click=undef&lsf=class%7C5%7C22&nflt=ht_id%3D204%3Bclass%3D3%3Bclass%3D4%3Bclass%3D5%3B&no_rooms=1&region=5757&room1=A%2CA&sb_price_type=total&src=searchresults&ss=Pattaya&ssb=empty&ssne=Pattaya&ssne_untouched=Pattaya&track_BHKF=1&unchecked_filter=class&unchecked_filter=class&unchecked_filter=class&unchecked_filter=hoteltype&rows=15'
 	pages = page
 
-	driver.get(url)
-
-	element = WebDriverWait(driver, 20).until(
-		lambda driver: driver.execute_script("return $.active == 0")
-		)
-	time.sleep(wait_m)
+	for i in range(3):
+		try:
+			driver.get(url)
+			element = WebDriverWait(driver, 10).until(
+				lambda driver: driver.execute_script("return $.active == 0")
+				)
+		except TimeoutException as e:
+			print('Error: time out exception..')
+			print('reTrying connection..')
+			continue
+		except WebDriverException as e:
+			print('Error: wev driver exception..')
+			print('reTrying connection..')
+			continue
+		time.sleep(wait_m)
+		break
 
 	for i in range(pages - 1):
 		hotels = driver.find_elements_by_css_selector('a.hotel_name_link.url')
+		if hotels == None:
+			print('Error: Couldn\'t fetch all hotel links..')
+			return
 		for hotel in hotels:
 			entry = {}
 			entry['hotel_href'] = str(hotel.get_attribute('href'))

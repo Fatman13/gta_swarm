@@ -49,7 +49,7 @@ def booking(filename, city):
 	# driver = webdriver.Ie()
 
 	wait_s = 3
-	wait_m = 10
+	wait_m = 5
 	wait_l = 15
 
 	# with open('output_booking_hotel_tokyo_href.csv', encoding='utf-8-sig') as csvfile:
@@ -68,16 +68,20 @@ def booking(filename, city):
 
 				try:
 					driver.get(url)
+					element = WebDriverWait(driver, 10).until(
+						lambda driver: driver.execute_script("return $.active == 0")
+					)
 				except TimeoutException as e:
 					print('Error: time out exception..')
 					continue
-				try:
-					element = WebDriverWait(driver, 20).until(
-						lambda driver: driver.execute_script("return $.active == 0")
-					)
 				except WebDriverException as e:
-					print('Error: failed to get hotel... WebDriverException..')
+					print('Error: wev driver exception..')
 					continue
+				# try:
+					
+				# except WebDriverException as e:
+				# 	print('Error: failed to get hotel... WebDriverException..')
+				# 	continue
 				time.sleep(wait_m)
 				# gta_keys.append(row['hotel_href'])
 

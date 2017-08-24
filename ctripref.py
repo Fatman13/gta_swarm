@@ -63,13 +63,13 @@ def ctripref(days, duration):
 
 	print('newest date: ' + newest_date)
 
-	while True:
-		sys.stdout.write("Would you like to proceed to call Ctrip's update hotel res no API? " + newest + " [Y/N]")
-		choice = input().lower()
-		if choice == 'y' or choice == 'yes':
-			break
-		if choice == 'n' or choice == 'no':
-			return
+	# while True:
+	# 	sys.stdout.write("Would you like to proceed to call Ctrip's update hotel res no API? " + newest + " [Y/N]")
+	# 	choice = input().lower()
+	# 	if choice == 'y' or choice == 'yes':
+	# 		break
+	# 	if choice == 'n' or choice == 'no':
+	# 		return
 
 	subprocess.call(['python', 'ctrip_update_res_no.py', '--filename', newest])
 
