@@ -19,9 +19,13 @@ res = []
 import csv
 import datetime
 import glob, os
+import re
 # os.chdir("/mydir")
 for file in glob.glob("*.xls"):
     # print(file)
+	s = ''
+	with open(file) as fp:
+		s = fp.read()
 
 	# with open('TUNIU-Look-to-Book_v202233_s532_2017-06-08-00-00.xls') as fp:
 	with open(file) as fp:
@@ -32,8 +36,18 @@ for file in glob.glob("*.xls"):
 
 		entry = {}
 
-		name = soup.find_all('p', class_='reportTitle')[0].get_text()
-		entry['name'] = name
+		# name = soup.find_all('p', class_='reportTitle')[0].get_text()
+		# entry['name'] = name
+
+		# print(str(soup))
+
+		try:
+			# client_name = re.search("class=3D'reportTitle'>(.*?)</p>", str(soup)).group(1)
+			client_name = re.search("class=3D'reportTitle'>(.*?)</p>", s).group(1)
+		except AttributeError:
+			print('Warning: fail to get client name.. ')
+			client_name = ''
+		entry['name'] = client_name
 
 		counter = 0
 
@@ -57,6 +71,9 @@ for file in glob.glob("*.xls"):
 					date = td_ele.get_text()
 					entry[date] = 0
 				if i == 1:
+					if td_ele.get_text() == '-':
+						searches = 0
+						continue
 					searches = int(td_ele.get_text().replace(',',''))
 					# searches = locale.atoi(td_ele.get_text())
 				if i == 2: 
