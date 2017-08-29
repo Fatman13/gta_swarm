@@ -24,6 +24,8 @@ import csv
 def getcdate(filename):
 	return datetime.datetime.fromtimestamp(os.path.getctime(filename)).date()
 
+CONFIRMED = 'Confirmed or Completed'
+
 @click.command()
 @click.option('--days', default=-5, type=int)
 # @click.option('--days', default=1, type=int)
@@ -59,7 +61,7 @@ def ctripref_stats(days):
 		try:
 			print(filename2_dict[filename1_date])
 		except KeyError:
-			print('Error: expected date is not in the dictionary..')
+			print('Warning: expected date is not in the dictionary..')
 			continue
 		entry['ctrip_api_file'] = filename2_dict[filename1_date]
 		res.append(entry)
@@ -69,13 +71,17 @@ def ctripref_stats(days):
 		ctrip_booking_num = 0
 		with open(ent['booking_file'], encoding='utf-8-sig') as csvfile:
 			reader = csv.DictReader(csvfile)
+			ids = set()
 			for row in reader:
-				total_booking_num = total_booking_num + 1
+				if row['gta_api_booking_id'] not in ids:
+					if row['booking_status'] == CONFIRMED:
+						total_booking_num = total_booking_num + 1
+				ids.add(row['gta_api_booking_id'])	
 		with open(ent['ctrip_api_file'], encoding='utf-8-sig') as csvfile:
 			reader = csv.DictReader(csvfile)
 			for row in reader:
 				ctrip_booking_num = ctrip_booking_num + 1
-		ent['booking_hotel_ref_percentage'] = float( ctrip_booking_num / total_booking_num )
+		ent['booking_hotel_ref_percentage'] = '{0:.3f}'.format(float( ctrip_booking_num / total_booking_num ))
 
 	keys = res[0].keys()
 	with open('output_hotel_ref_stats_' + datetime.datetime.now().strftime('%y%m%d_%H%M') + '.csv', 'w', newline='', encoding='utf-8') as output_file:
