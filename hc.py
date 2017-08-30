@@ -180,7 +180,7 @@ CONFIRMED = 'Confirmed or Completed'
 HOTEL_CONFIRMED = 'Confirmed (registered )'
 
 @click.command()
-@click.option('--filename', default='output_Search_item_hr_170810_1536.csv')
+@click.option('--filename', default='output_Search_item_hr_170830_1013.csv')
 # @click.option('--days', default=15, type=int)
 def hc(filename):
 
@@ -214,6 +214,7 @@ def hc(filename):
 				entry['hotel_confirmation_#'] = row['hotel_confirmation_#']
 			if 'hotel_confirmation_status' in row:
 				entry['hotel_confirmation_status'] = row['hotel_confirmation_status']
+			entry['hotel_email'] = ''
 			bookings.append(entry)
 			# ids.add(row['gta_api_booking_id'])
 
