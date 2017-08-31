@@ -39,9 +39,9 @@ TYPE_CREATION = 'creation'
 # @click.option('--file_name', default='top30')
 # @click.option('--from_d', default='2017-07-29')
 @click.option('--days', default=0, type=int)
-@click.option('--duration', default=3, type=int)
-@click.option('--client', default='lefei')
-@click.option('--d_type', default=TYPE_CREATION)
+@click.option('--duration', default=0, type=int)
+@click.option('--client', default='ctrip_di')
+@click.option('--d_type', default=TYPE_DEPARTURE)
 def booking_id(days, duration, client, d_type):
 
 	url = 'https://rbs.gta-travel.com/rbscnapi/RequestListenerServlet'
