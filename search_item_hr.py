@@ -31,11 +31,25 @@ def daterange(start_date, end_date):
 # with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
 # 	booking_id_secret = (json.load(data_file))['booking_id']
 
+
+
 REF_API = 'api'
 REF_CLIENT = 'client'
 REF_AGENT = 'agent'
 
 CONFIRMED = 'Confirmed or Completed'
+
+bad_hotels = [{"city_code": "SHEN", "item_code": "ASC"}, 
+				{"city_code": "CHEG", "item_code": "HOW"},
+				{"city_code": "WUH", "item_code": "CIT"},
+				{"city_code": "CKG", "item_code": "94"}
+				]
+
+def is_bad_hotel(city_code, item_code):
+	for bad_hotel in bad_hotels:
+		if bad_hotel['city_code'] == city_code and bad_hotel['item_code'] == item_code:
+			return True
+	return False
 
 @click.command()
 @click.option('--filename', default='output_SearchItemHR_170718_1722.csv')
@@ -137,6 +151,18 @@ def searh_item_hr(filename, client):
 			hotel_ref_ele = booking_item.find('.//ItemConfirmationReference')
 			if hotel_ref_ele != None:
 				booking['hotel_confirmation_#'] = hotel_ref_ele.text
+
+			# logic to exclude bad hotels
+			city_ele = booking_item.find('.//ItemCity')
+			item_ele = booking_item.find('.//Item')
+			if city_ele != None and items_ele != None:
+				city_code = city_ele.get('Code')
+				item_code = item_ele.get('Code')
+				
+				if is_bad_hotel(city_code, item_code):
+					print('Warning: bad hotel.. skipping.. ')
+					continue
+
 			entry = copy.deepcopy(booking)
 			res.append(entry)
 

@@ -27,7 +27,8 @@ import re
 def ctripref(days, duration):
 
 	# python booking_id.py --days 0 --duration 0 --client ctrip --d_type departure
-	subprocess.call(['python', 'booking_id.py', '--days', str(days), '--duration', str(duration), '--client', 'ctrip', '--d_type', 'departure'])
+	# subprocess.call(['python', 'booking_id.py', '--days', str(days), '--duration', str(duration), '--client', 'ctrip', '--d_type', 'departure'])
+	subprocess.call(['python', 'booking_id_ctrip.py', '--days', str(days), '--duration', str(duration), '--d_type', 'departure'])
 
 	for i in range(3):
 		print('sleeping..')
