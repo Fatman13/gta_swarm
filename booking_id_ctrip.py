@@ -114,6 +114,9 @@ def booking_id_ctrip(days, duration, d_type):
 			entry['booking_name'] = booking.find('.//BookingName').text
 			entry['booking_net_price'] = booking.find('.//BookingPrice').get('Nett')
 			entry['booking_currency'] = booking.find('.//BookingPrice').get('Currency')
+
+			# fix client with multi ids
+			entry['client_name'] = client
 			res.append(entry)
 
 	# keys = res[0].keys()

@@ -60,23 +60,15 @@ def searh_item_hr(filename, client):
 	url = 'https://rbs.gta-travel.com/rbscnapi/RequestListenerServlet'
 	pp = pprint
 
+	# agent_secret = None
+	# with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
+	# 	agent_secret = (json.load(data_file))[client]
+
 	agent_secret = None
 	with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
-		agent_secret = (json.load(data_file))[client]
-
-	# validate_d(from_d)
-	# validate_d(to_d)
-
-	# from_date = datetime.datetime.today().date() + datetime.timedelta(days=days)
-	# to_date = from_date + datetime.timedelta(days=1)
+		agent_secret = json.load(data_file)
 
 	print('Search client.. ' + client)
-	# print('Duration.. ' + )
-
-	# from_date = datetime.datetime.strptime(from_d, '%Y-%m-%d').date()
-	# to_date = datetime.datetime.strptime(to_d, '%Y-%m-%d').date()
-
-	# pp.pprint('? ' + str(skip))
 
 	bookings = []
 	res = []
@@ -99,20 +91,28 @@ def searh_item_hr(filename, client):
 				entry['booking_currency'] = row['booking_currency']
 				entry['hotel_confirmation_#'] = ''
 				entry['hotel_confirmation_status'] = ''
+				entry['client_name'] = ''
 				if 'hotel_confirmation_#' in row:
 					entry['hotel_confirmation_#'] = row['hotel_confirmation_#']
 				if 'hotel_confirmation_status' in row:
 					entry['hotel_confirmation_status'] = row['hotel_confirmation_status']
+				if 'client_name' in row:
+					entry['client_name'] = row['client_name']
 				bookings.append(entry)
 			ids.add(row['gta_api_booking_id'])
 
 	search_tree = ET.parse(os.path.join(os.getcwd(), 'SearchBookingItemRequest.xml'))
-	search_tree.find('.//RequestorID').set('Client', agent_secret['id'])
-	search_tree.find('.//RequestorID').set('EMailAddress', agent_secret['email'])
-	search_tree.find('.//RequestorID').set('Password', agent_secret['password'])
 
 	for counter, booking in enumerate(bookings):
 		pp.pprint('Searching booking id: ' + str(counter) + ': ' + booking['gta_api_booking_id'])
+
+		if 'client_name' not in booking.keys():
+			print('Error: No client name...')
+			continue
+
+		search_tree.find('.//RequestorID').set('Client', agent_secret[booking['client_name']]['id'])
+		search_tree.find('.//RequestorID').set('EMailAddress', agent_secret[booking['client_name']]['email'])
+		search_tree.find('.//RequestorID').set('Password', agent_secret[booking['client_name']]['password'])
 
 		if not booking['hotel_confirmation_#'] and booking['hotel_confirmation_#'] != '':
 			print('have hotel confirmation # already.. skipping')
