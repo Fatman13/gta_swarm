@@ -174,13 +174,14 @@ def login_GCres(driver):
 		pprint.pprint('Setting cookie..')
 		cookies[cookie['name']] = cookie['value']
 
+	print(cookies)
 	return cookies
 
 CONFIRMED = 'Confirmed or Completed'
 HOTEL_CONFIRMED = 'Confirmed (registered )'
 
 @click.command()
-@click.option('--filename', default='output_Search_item_hr_170830_1013.csv')
+@click.option('--filename', default='output_Search_item_hr_170918_1021.csv')
 # @click.option('--days', default=15, type=int)
 def hc(filename):
 
@@ -229,6 +230,9 @@ def hc(filename):
 			if not cookies:
 				print('Fatal: Failed to get cookies...')
 				break  
+			if len(cookies.items()) <= 1:
+				print('Fatal: Login may have failed...')
+				break
 
 		if CONFIRMED not in booking['booking_status']:
 			print('Booking not confirmed.. skipping..')

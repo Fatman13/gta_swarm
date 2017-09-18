@@ -16,6 +16,7 @@ import copy
 # import os
 # import json
 # import logging
+import re
 
 def validate_d(date_text):
 	try:
@@ -66,8 +67,20 @@ REF_AGENT = 'agent'
 CONFIRMED = 'Confirmed or Completed'
 CANCELLED = 'Cancelled (to register)'
 
+def is_bad_date(filename_regex, newest):
+	today_date = datetime.datetime.now().strftime('%y%m%d')
+	try:
+		newest_date = re.search(filename_regex, newest).group(1)
+	except AttributeError:
+		newest_date = ''
+	if newest_date != today_date:
+		print('Error: newest date != today date.. mannual intervention needed..')
+		return True
+	print('newest date: ' + newest_date)
+	return False
+
 @click.command()
-@click.option('--filename', default='output_hotel_ref_170815_1139.csv')
+@click.option('--filename', default='output_hotel_ref_170918_1704.csv')
 # @click.option('--client', default='ctrip')
 # @click.option('--days', default=1, type=int)
 def ctrip_update_res_no(filename):
@@ -77,6 +90,10 @@ def ctrip_update_res_no(filename):
 
 	soap_wrapper_head = '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body>'
 	soap_wrapper_foot = '</soap:Body></soap:Envelope>'
+
+	if is_bad_date('output_hotel_ref_(\d+)', filename):
+		print('Fatal: bad date .. no push to ctrip .. ')
+		return
 
 	bookings = []
 	res = []

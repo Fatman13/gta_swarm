@@ -28,10 +28,11 @@ def is_bad_date(filename_regex, newest):
 		newest_date = ''
 	if newest_date != today_date:
 		print('Error: newest date != today date.. mannual intervention needed..')
-		return False
+		return True
 	print('newest date: ' + newest_date)
-	return True
+	return False
 
+# hua shi shui jiao
 def hua_style_sleep():
 	for i in range(3):
 		print('sleeping..' + str(i))
