@@ -26,8 +26,8 @@ def daterange(start_date, end_date):
 
 @click.command()
 @click.option('--file_name', default='gta_hotel_keys')
-@click.option('--from_d', default='2017-09-03')
-@click.option('--to_d', default='2017-09-04')
+@click.option('--from_d', default='2017-09-28')
+@click.option('--to_d', default='2017-09-29')
 @click.option('--client', default='ctrip')
 def asp(file_name, from_d, to_d, client):
 
@@ -50,7 +50,13 @@ def asp(file_name, from_d, to_d, client):
 			# pp.pprint(line)
 			if line in hotel_ids:
 				continue
-			city_code, item_code = line.rstrip().split('_')
+			
+			try:
+				city_code, item_code = line.rstrip().split('_')
+			except ValueError:
+				print('Warning: skipping GTA key.. ' + line.rstrip())
+				continue
+
 			hotel_codes.append(dict([('city_code', city_code), ('item_code', item_code), ('missing_price', [])]))
 
 			hotel_ids.add(line)
