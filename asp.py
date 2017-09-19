@@ -27,7 +27,7 @@ def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
         yield start_date + datetime.timedelta(n)
 
-MAX_RETRIES = 3
+MAX_RETRIES = 2
 
 def has_item_price(r):
 	r_tree = ET.fromstring(r.text)
@@ -60,16 +60,13 @@ def asp(file_name, from_d, to_d, client):
 		for line in file:
 			# pp.pprint(line)
 			if line in hotel_ids:
-				continue
-			
+				continue			
 			try:
 				city_code, item_code = line.rstrip().split('_')
 			except ValueError:
 				print('Warning: skipping GTA key.. ' + line.rstrip())
 				continue
-
 			hotel_codes.append(dict([('city_code', city_code), ('item_code', item_code), ('missing_price', [])]))
-
 			hotel_ids.add(line)
 
 	agent_secret = None
@@ -101,22 +98,22 @@ def asp(file_name, from_d, to_d, client):
 			# r_tree = None
 			for i in range(MAX_RETRIES):
 				try:
-					r = requests.post(url, data=ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml'), timeout=30)
+					r = requests.post(url, data=ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml'), timeout=10)
 					# retry if no price found?
 					if not has_item_price(r):
+						print('retry.. ' + str(i))
 						continue
-
 				except OSError:
-					pp.pprint('Error: ignoring OSError...')
+					pp.pprint('Error: ignoring OSError...' + str(i))
 					continue
 				except ConnectionError:
-					pp.pprint('Error: ignoring ConnectionError...')
+					pp.pprint('Error: ignoring ConnectionError...' + str(i))
 					continue
 				except ChunkedEncodingError:
-					pp.pprint('Error: ignoring ChunkedEncodingError...')
+					pp.pprint('Error: ignoring ChunkedEncodingError...' + str(i))
 					continue
 				except ReadTimeout:
-					pp.pprint('Error: ignoring ReadTimeout...')
+					pp.pprint('Error: ignoring ReadTimeout...' + str(i))
 					continue
 				else:
 					break
@@ -143,7 +140,7 @@ def asp(file_name, from_d, to_d, client):
 					hotel_name = hotel.find('.//Item').text
 					for room_cat in r_tree.find('.//RoomCategories'):
 						pp.pprint('Id: ' + str(room_cat.get('Id')))
-						pp.pprint('Id: ' + str(room_cat.find('.//Description').text))
+						pp.pprint('Des: ' + str(room_cat.find('.//Description').text))
 						entry = dict()
 						entry['GTA_key'] = hotel_code['city_code'] + '_' + hotel_code['item_code']
 						entry['Hotel_Name'] = hotel_name
