@@ -145,43 +145,50 @@ def get_hotel_email(hotel_id, cookies):
 
 TO_REGISTER = 'Confirmed (to register)'
 
+MAX_RETRIES = 3
+
 def login_GCres(driver):
 	GCres_url = 'https://hotels.gta-travel.com/gcres/auth/securelogin'
 
-	try:
-		driver.get(GCres_url)
-	except TimeoutException:
-		print('f.. GCres login page time out..')
-		return
+	for i in range(MAX_RETRIES):
+		try:
+			driver.get(GCres_url)
+		except TimeoutException:
+			print('f.. GCres login page time out..')
+			return
 
-	company_code = driver.find_element_by_id("qualifier")
-	username = driver.find_element_by_id("username")
-	password = driver.find_element_by_id("password")
+		company_code = driver.find_element_by_id("qualifier")
+		username = driver.find_element_by_id("username")
+		password = driver.find_element_by_id("password")
 
-	company_code.send_keys("GTA")
-	# username.send_keys("809452")
-	username.send_keys(hc_secret['username'])
-	# password.send_keys("!234Qwer")
-	password.send_keys(hc_secret['password'])
+		company_code.send_keys("GTA")
+		username.send_keys(hc_secret['username'])
+		password.send_keys(hc_secret['password'])
 
-	driver.find_element_by_id("login").click()
-	time.sleep(5)
+		driver.find_element_by_id("login").click()
+		time.sleep(5)
 
-	# get cookie
-	cookies = {}
-	for cookie in driver.get_cookies():
-		# pprint.pprint(cookie)
-		pprint.pprint('Setting cookie..')
-		cookies[cookie['name']] = cookie['value']
+		# get cookie
+		cookies = {}
+		for cookie in driver.get_cookies():
+			# pprint.pprint(cookie)
+			pprint.pprint('Setting cookie..')
+			cookies[cookie['name']] = cookie['value']
 
-	print(cookies)
+		print(cookies)
+		if len(cookies.items()) <= 1:
+			print('Warning: Retry login.. ' + str(i))
+			continue
+		else:
+			print('Cookies secured.. ' + str(i))
+			break
 	return cookies
 
 CONFIRMED = 'Confirmed or Completed'
 HOTEL_CONFIRMED = 'Confirmed (registered )'
 
 @click.command()
-@click.option('--filename', default='output_Search_item_hr_170918_1021.csv')
+@click.option('--filename', default='output_Search_item_hr_170920_1048.csv')
 # @click.option('--days', default=15, type=int)
 def hc(filename):
 
