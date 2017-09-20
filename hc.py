@@ -161,6 +161,10 @@ def login_GCres(driver):
 		username = driver.find_element_by_id("username")
 		password = driver.find_element_by_id("password")
 
+		company_code.clear()
+		username.clear()
+		password.clear()
+
 		company_code.send_keys("GTA")
 		username.send_keys(hc_secret['username'])
 		password.send_keys(hc_secret['password'])
@@ -315,7 +319,8 @@ def hc(filename):
 			# 	booking['hotel_confirmation_#'] = hotel_ref_num
 			booking['hotel_confirmation_#'] = get_hotel_ref(booking_id, cookies)
 
-			booking['hotel_email'] = get_hotel_email(hotel_id, cookies)
+			# turn off for now
+			# booking['hotel_email'] = get_hotel_email(hotel_id, cookies)
 
 			entry = copy.deepcopy(booking)
 			# print(entry)

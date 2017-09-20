@@ -78,8 +78,17 @@ def asp(file_name, from_d, to_d, client):
 	search_tree.find('.//RequestorID').set('EMailAddress', agent_secret['email'])
 	search_tree.find('.//RequestorID').set('Password', agent_secret['password'])
 
-	for hotel_code in hotel_codes:
-		pp.pprint('Searching Price for ' + hotel_code['city_code'] + ' ' + hotel_code['item_code'])
+	for counter, hotel_code in enumerate(hotel_codes):
+		msg = ' '.join([ 'Searching Price for',
+							hotel_code['city_code'],
+							hotel_code['item_code'],
+							'..',
+							'id:',
+							str(counter)
+						])
+		# pp.pprint('Searching Price for ' + hotel_code['city_code'] + ' ' + hotel_code['item_code'])
+		pp.pprint(msg)
+
 		search_tree.find('.//ItemDestination').set('DestinationCode', hotel_code['city_code'])
 		search_tree.find('.//ItemCode').text = hotel_code['item_code']
 		search_tree.find('.//PaxRoom').set('Adults', str(2))
