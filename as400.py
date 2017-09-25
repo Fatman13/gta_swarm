@@ -40,8 +40,8 @@ clients = { 'Qunar': '5840, 5576, 5673',
 
 @click.command()
 # @click.option('--country', default='Canada')
-@click.option('--client', default='Hotel_Travel_28')
-@click.option('--site', default='28')
+@click.option('--client', default='Ctrip')
+@click.option('--site', default='41')
 def as400(client, site):
 
 	print('Connnecting...')

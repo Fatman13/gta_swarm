@@ -39,7 +39,7 @@ def find_entry(entry_dict, room_name):
 
 @click.command()
 @click.option('--filename', default='ctrip_hotel_ids')
-@click.option('--days', default=15, type=int)
+@click.option('--days', default=20, type=int)
 def ctripplus(filename, days):
 	pp = pprint
 	res = []

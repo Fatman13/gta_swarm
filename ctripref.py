@@ -81,5 +81,12 @@ def ctripref(days, duration):
 
 	subprocess.call(['python', 'ctrip_update_res_no.py', '--filename', newest])
 
+	# keep track of bookings that has been pushed
+	newest = max(glob.iglob('output_ctrip_update_res_no_*.csv'), key=os.path.getctime)
+	if is_bad_date('output_ctrip_update_res_no_(\d+)', newest):
+		print('Error: bad date.. ')
+		return
+	subprocess.call(['python', 'ctrip_store_booking.py', '--filename', newest, '--days', '-7'])
+
 if __name__ == '__main__':
 	ctripref()
