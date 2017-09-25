@@ -32,6 +32,23 @@ def is_bad_date(filename_regex, newest):
 	print('newest date: ' + newest_date)
 	return False
 
+def is_bad_date_re(filename_regex, newest):
+	today_date = datetime.datetime.now().date()
+	try:
+		newest_date = re.search(filename_regex, newest).group(1)
+	except AttributeError:
+		newest_date = ''
+	try:
+		newest_date = datetime.datetime.strptime(newest_date , '%y%m%d').date()
+	except ValueError:
+		print('Error: Unable to convert date')
+		return True
+	if newest_date < today_date:
+		print('Error: newest date < today date.. mannual intervention needed..')
+		return True
+	print('newest date: ' + str(newest_date))
+	return False
+
 # hua shi shui jiao
 def hua_style_sleep():
 	for i in range(3):
@@ -47,7 +64,8 @@ def ctripref(days, duration):
 	subprocess.call(['python', 'booking_id_ctrip.py', '--days', str(days), '--duration', str(duration), '--d_type', 'departure'])
 
 	newest = max(glob.iglob('output_Search_booking_id_*.csv'), key=os.path.getctime)
-	if is_bad_date('output_Search_booking_id_(\d+)', newest):
+	# if is_bad_date('output_Search_booking_id_(\d+)', newest):
+	if is_bad_date_re('output_Search_booking_id_(\d+)', newest):
 		print('Error: bad date.. ')
 		return
 	subprocess.call(['python', 'search_item_hr.py', '--filename', newest])
@@ -55,7 +73,8 @@ def ctripref(days, duration):
 	hua_style_sleep()
 
 	newest = max(glob.iglob('output_Search_item_hr_*.csv'), key=os.path.getctime)
-	if is_bad_date('output_Search_item_hr_(\d+)', newest):
+	# if is_bad_date('output_Search_item_hr_(\d+)', newest):
+	if is_bad_date_re('output_Search_item_hr_(\d+)', newest):
 		print('Error: bad date.. ')
 		return
 	subprocess.call(['python', 'hc.py', '--filename', newest])
@@ -67,7 +86,8 @@ def ctripref(days, duration):
 
 	newest = max(glob.iglob('output_hotel_ref_*.csv'), key=os.path.getctime)
 
-	if is_bad_date('output_hotel_ref_(\d+)', newest):
+	# if is_bad_date('output_hotel_ref_(\d+)', newest):
+	if is_bad_date_re('output_hotel_ref_(\d+)', newest):
 		print('Error: bad date.. ')
 		return
 
@@ -83,10 +103,11 @@ def ctripref(days, duration):
 
 	# keep track of bookings that has been pushed
 	newest = max(glob.iglob('output_ctrip_update_res_no_*.csv'), key=os.path.getctime)
-	if is_bad_date('output_ctrip_update_res_no_(\d+)', newest):
+	# if is_bad_date('output_ctrip_update_res_no_(\d+)', newest):
+	if is_bad_date_re('output_ctrip_update_res_no_(\d+)', newest):
 		print('Error: bad date.. ')
 		return
-	subprocess.call(['python', 'ctrip_store_booking.py', '--filename', newest, '--days', '-7'])
+	subprocess.call(['python', 'ctrip_store_booking.py', '--filename', newest, '--days', '-30'])
 
 if __name__ == '__main__':
 	ctripref()

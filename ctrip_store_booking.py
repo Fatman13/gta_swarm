@@ -79,14 +79,32 @@ def is_bad_date(filename_regex, newest):
 	print('newest date: ' + newest_date)
 	return False
 
+def is_bad_date_re(filename_regex, newest):
+	today_date = datetime.datetime.now().date()
+	try:
+		newest_date = re.search(filename_regex, newest).group(1)
+	except AttributeError:
+		newest_date = ''
+	try:
+		newest_date = datetime.datetime.strptime(newest_date , '%y%m%d').date()
+	except ValueError:
+		print('Error: Unable to convert date')
+		return True
+	if newest_date < today_date:
+		print('Error: newest date < today date.. mannual intervention needed..')
+		return True
+	print('newest date: ' + str(newest_date))
+	return False
+
 @click.command()
-@click.option('--filename', default='output_ctrip_update_res_no_170921_1045.csv')
-@click.option('--days', default=-7, type=int)
+@click.option('--filename', default='output_ctrip_update_res_no_170925_1040.csv')
+@click.option('--days', default=-30, type=int)
 # @click.option('--client', default='ctrip')
 # @click.option('--days', default=1, type=int)
 def ctrip_store_booking(filename, days):
 
-	if is_bad_date('output_ctrip_update_res_no_(\d+)', filename):
+	# if is_bad_date('output_ctrip_update_res_no_(\d+)', filename):
+	if is_bad_date_re('output_ctrip_update_res_no_(\d+)', filename):
 		print('Fatal: bad date .. no store booking .. ')
 		return
 
@@ -163,12 +181,15 @@ def ctrip_store_booking(filename, days):
 
 	cut_off_date = datetime.datetime.today().date() + datetime.timedelta(days=days)
 
+	ids = set()
 	for counter, booking in enumerate(bookings):
 		print('Booking store Ctrip: ' + str(counter) + ': ' + booking['gta_api_booking_id'])
 
 		if datetime.datetime.strptime(booking['booking_departure_date'] , '%Y-%m-%d').date() < cut_off_date:
 			continue
-
+		if booking['gta_api_booking_id'] in ids:
+			continue
+		ids.add(booking['gta_api_booking_id'])
 		res.append(booking)
 
 	if not res:

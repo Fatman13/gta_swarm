@@ -79,6 +79,23 @@ def is_bad_date(filename_regex, newest):
 	print('newest date: ' + newest_date)
 	return False
 
+def is_bad_date_re(filename_regex, newest):
+	today_date = datetime.datetime.now().date()
+	try:
+		newest_date = re.search(filename_regex, newest).group(1)
+	except AttributeError:
+		newest_date = ''
+	try:
+		newest_date = datetime.datetime.strptime(newest_date , '%y%m%d').date()
+	except ValueError:
+		print('Error: Unable to convert date')
+		return True
+	if newest_date < today_date:
+		print('Error: newest date < today date.. mannual intervention needed..')
+		return True
+	print('newest date: ' + str(newest_date))
+	return False
+
 @click.command()
 @click.option('--filename', default='output_hotel_ref_170920_1232.csv')
 # @click.option('--client', default='ctrip')
@@ -91,7 +108,8 @@ def ctrip_update_res_no(filename):
 	soap_wrapper_head = '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body>'
 	soap_wrapper_foot = '</soap:Body></soap:Envelope>'
 
-	if is_bad_date('output_hotel_ref_(\d+)', filename):
+	# if is_bad_date('output_hotel_ref_(\d+)', filename):
+	if is_bad_date_re('output_hotel_ref_(\d+)', filename):
 		print('Fatal: bad date .. no push to ctrip .. ')
 		return
 
@@ -137,6 +155,22 @@ def ctrip_update_res_no(filename):
 
 			ids.add(row['gta_api_booking_id'])
 
+	# exclude bookings already pushed to ctrip 
+	gta_api_ids_exclu = []
+	try:
+		output_file_name = 'output_ctrip_booking_store.csv'
+		with open(output_file_name, encoding='utf-8-sig') as csvfile:
+			ids = set()
+			reader = csv.DictReader(csvfile)
+			for row in reader:
+				# pp.pprint(row['hotel_id'])
+				if row['gta_api_booking_id'] not in ids:
+					gta_api_ids_exclu.append(row['gta_api_booking_id'])
+				ids.add(row['gta_api_booking_id'])
+	except FileNotFoundError:
+		print('Error: file not found.. bye.. ')
+		return
+
 	search_tree = ET.parse(os.path.join(os.getcwd(), 'CtripHotelResNumUpdateRQ.xml'))
 
 	headers = { 'Content-Type': 'text/xml',
@@ -144,6 +178,10 @@ def ctrip_update_res_no(filename):
 
 	for counter, booking in enumerate(bookings):
 		pp.pprint('Updating booking id to Ctrip: ' + str(counter) + ': ' + booking['gta_api_booking_id'])
+
+		if booking['gta_api_booking_id'] in gta_api_ids_exclu:
+			print('Booking has already being pushed to Ctrip API once.. ')
+			continue
 
 		if len(booking['hotel_confirmation_#']) == 0:
 			print('booking confirmation # len == 0 .. skipping..')
