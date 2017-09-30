@@ -99,14 +99,15 @@ def is_bad_date_re(filename_regex, newest):
 @click.command()
 @click.option('--filename', default='output_ctrip_update_res_no_170925_1040.csv')
 @click.option('--days', default=-30, type=int)
+@click.option('--output', default='output_ctrip_booking_store.csv')
 # @click.option('--client', default='ctrip')
 # @click.option('--days', default=1, type=int)
-def ctrip_store_booking(filename, days):
+def ctrip_store_booking(filename, days, output):
 
 	# if is_bad_date('output_ctrip_update_res_no_(\d+)', filename):
-	if is_bad_date_re('output_ctrip_update_res_no_(\d+)', filename):
-		print('Fatal: bad date .. no store booking .. ')
-		return
+	# if is_bad_date_re('output_ctrip_update_res_no_(\d+)', filename):
+	# 	print('Fatal: bad date .. no store booking .. ')
+	# 	return
 
 	bookings = []
 	res = []
@@ -142,7 +143,7 @@ def ctrip_store_booking(filename, days):
 					bookings.append(entry)
 				ids.add(row['gta_api_booking_id'])
 
-		output_file_name = 'output_ctrip_booking_store.csv'
+		output_file_name = output
 		with open(output_file_name, encoding='utf-8-sig') as csvfile:
 			ids = set()
 			reader = csv.DictReader(csvfile)
@@ -203,7 +204,7 @@ def ctrip_store_booking(filename, days):
 	# 								datetime.datetime.today().date().strftime('%y%m%d'),
 	# 								datetime.datetime.now().strftime('%H%M')
 	# 							]) + '.csv'
-	output_file_name = 'output_ctrip_booking_store.csv'
+	output_file_name = output
 	with open(output_file_name, 'w', newline='', encoding='utf-8') as output_file:
 		dict_writer = csv.DictWriter(output_file, keys)
 		dict_writer.writeheader()

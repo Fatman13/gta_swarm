@@ -68,6 +68,7 @@ def ctripref(days, duration):
 	if is_bad_date_re('output_Search_booking_id_(\d+)', newest):
 		print('Error: bad date.. ')
 		return
+	subprocess.call(['python', 'ctrip_store_booking.py', '--filename', newest, '--days', '-30', '--output', 'output_ctrip_search_booking_store.csv'])
 	subprocess.call(['python', 'search_item_hr.py', '--filename', newest])
 
 	hua_style_sleep()
@@ -107,7 +108,7 @@ def ctripref(days, duration):
 	if is_bad_date_re('output_ctrip_update_res_no_(\d+)', newest):
 		print('Error: bad date.. ')
 		return
-	subprocess.call(['python', 'ctrip_store_booking.py', '--filename', newest, '--days', '-30'])
+	subprocess.call(['python', 'ctrip_store_booking.py', '--filename', newest, '--days', '-30', '--output', 'output_ctrip_booking_store.csv'])
 
 if __name__ == '__main__':
 	ctripref()

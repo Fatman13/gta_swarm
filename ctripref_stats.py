@@ -27,7 +27,7 @@ def getcdate(filename):
 CONFIRMED = 'Confirmed or Completed'
 
 @click.command()
-@click.option('--days', default=-5, type=int)
+@click.option('--days', default=-7, type=int)
 # @click.option('--days', default=1, type=int)
 def ctripref_stats(days):
 
