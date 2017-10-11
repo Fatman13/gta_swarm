@@ -28,6 +28,12 @@ from requests.exceptions import ReadTimeout
 
 TIME_OUT = 30
 
+# hua shi shui jiao
+def hua_style_sleep(seconds):
+	for i in range(seconds):
+		print('hc sleeping..' + str(i))
+		time.sleep(1)
+
 hc_secret = None
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
 	hc_secret = (json.load(data_file))['hc']
@@ -145,7 +151,7 @@ def get_hotel_email(hotel_id, cookies):
 
 TO_REGISTER = 'Confirmed (to register)'
 
-MAX_RETRIES = 3
+MAX_RETRIES = 100
 
 def login_GCres(driver):
 	GCres_url = 'https://hotels.gta-travel.com/gcres/auth/securelogin'
@@ -182,6 +188,7 @@ def login_GCres(driver):
 		print(cookies)
 		if len(cookies.items()) <= 1:
 			print('Warning: Retry login.. ' + str(i))
+			hua_style_sleep(30)
 			continue
 		else:
 			print('Cookies secured.. ' + str(i))
@@ -192,7 +199,7 @@ CONFIRMED = 'Confirmed or Completed'
 HOTEL_CONFIRMED = 'Confirmed (registered )'
 
 @click.command()
-@click.option('--filename', default='output_Search_item_hr_170920_1048.csv')
+@click.option('--filename', default='output_Search_item_hr_171011_1016.csv')
 # @click.option('--days', default=15, type=int)
 def hc(filename):
 
