@@ -57,7 +57,7 @@ def hua_style_sleep():
 
 @click.command()
 @click.option('--days', default=0, type=int)
-@click.option('--duration', default=3, type=int)
+@click.option('--duration', default=2, type=int)
 # @click.option('--days', default=1, type=int)
 def ctripref(days, duration):
 

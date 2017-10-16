@@ -97,7 +97,7 @@ def is_bad_date_re(filename_regex, newest):
 	return False
 
 @click.command()
-@click.option('--filename', default='output_hotel_ref_171011_1059.csv')
+@click.option('--filename', default='output_hotel_ref_171013_1237.csv')
 # @click.option('--client', default='ctrip')
 # @click.option('--days', default=1, type=int)
 def ctrip_update_res_no(filename):
