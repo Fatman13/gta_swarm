@@ -37,8 +37,8 @@ def has_item_price(r):
 
 @click.command()
 @click.option('--file_name', default='gta_hotel_keys')
-@click.option('--from_d', default='2017-10-28')
-@click.option('--to_d', default='2017-10-29')
+@click.option('--from_d', default='2017-11-19')
+@click.option('--to_d', default='2017-11-20')
 @click.option('--client', default='ctrip')
 def asp(file_name, from_d, to_d, client):
 

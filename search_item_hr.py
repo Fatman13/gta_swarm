@@ -52,7 +52,7 @@ def is_bad_hotel(city_code, item_code):
 	return False
 
 @click.command()
-@click.option('--filename', default='output_SearchItemHR_170718_1722.csv')
+@click.option('--filename', default='output_Search_booking_id_171020_0000_0d_t.csv')
 @click.option('--client', default='ctrip')
 # @click.option('--days', default=1, type=int)
 def searh_item_hr(filename, client):
@@ -147,14 +147,19 @@ def searh_item_hr(filename, client):
 			print('Error: No BookingItems found..')
 			continue
 
-		for booking_item in r_tree.find('.//BookingItems'):
-			hotel_ref_ele = booking_item.find('.//ItemConfirmationReference')
+		# for booking_item in r_tree.find('.//BookingItems'):
+		for response in r_tree.find('.//ResponseDetails'):
+			# print(booking_item.text)
+
+			hotel_ref_ele = response.find('.//ItemConfirmationReference')
 			if hotel_ref_ele != None:
 				booking['hotel_confirmation_#'] = hotel_ref_ele.text
+			else:
+				continue
 
 			# logic to exclude bad hotels
-			city_ele = booking_item.find('.//ItemCity')
-			item_ele = booking_item.find('.//Item')
+			city_ele = response.find('.//ItemCity')
+			item_ele = response.find('.//Item')
 			if city_ele != None and items_ele != None:
 				city_code = city_ele.get('Code')
 				item_code = item_ele.get('Code')
