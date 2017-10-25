@@ -197,6 +197,8 @@ def ctrip_update_res_no(filename):
 
 		if not isValid(booking['hotel_confirmation_#']):
 			print('Warning: Confirmation # not valid.. ' + str(booking['hotel_confirmation_#']))
+			booking['Ctrip_update_API'] = 'not sent to ctrip'
+			res.append(booking)
 			continue
 
 		for res_id in search_tree.find('.//{http://www.opentravel.org/OTA/2003/05}HotelReservationIDs'):
