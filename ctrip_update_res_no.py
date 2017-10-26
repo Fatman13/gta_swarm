@@ -133,13 +133,16 @@ def ctrip_update_res_no(filename):
 				entry['booking_net_price'] = row['booking_net_price']
 				entry['booking_currency'] = row['booking_currency']
 				# confirmation_# list
-				entry['hotel_confirmation_#'] = []
+				# ad-hoc bug fix
+				# entry['hotel_confirmation_#'] = []
+				entry['hotel_confirmation_#'] = set()
 				entry['hotel_confirmation_status'] = ''
 				entry['hotel_email'] = ''
 				if 'hotel_email' in row:
 					entry['hotel_email'] = row['hotel_email']
 				if 'hotel_confirmation_#' in row:
-					entry['hotel_confirmation_#'].append(row['hotel_confirmation_#'])
+					# entry['hotel_confirmation_#'].append(row['hotel_confirmation_#'])
+					entry['hotel_confirmation_#'].add(row['hotel_confirmation_#'])
 				if 'hotel_confirmation_status' in row:
 					entry['hotel_confirmation_status'] = row['hotel_confirmation_status']
 				# new 
@@ -151,7 +154,8 @@ def ctrip_update_res_no(filename):
 				for booking in bookings:
 					if booking['gta_api_booking_id'] == row['gta_api_booking_id']:
 						booking_entry = booking
-				booking_entry['hotel_confirmation_#'].append(row['hotel_confirmation_#'])
+				# booking_entry['hotel_confirmation_#'].append(row['hotel_confirmation_#'])
+				booking_entry['hotel_confirmation_#'].add(row['hotel_confirmation_#'])
 
 			ids.add(row['gta_api_booking_id'])
 
@@ -195,7 +199,7 @@ def ctrip_update_res_no(filename):
 			print('Booking canceled .. skipping..')
 			continue
 
-		if not isValid(booking['hotel_confirmation_#']):
+		if not isValid(list(booking['hotel_confirmation_#'])):
 			print('Warning: Confirmation # not valid.. ' + str(booking['hotel_confirmation_#']))
 			booking['Ctrip_update_API'] = 'not sent to ctrip'
 			res.append(booking)
