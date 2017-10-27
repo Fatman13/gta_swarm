@@ -159,13 +159,22 @@ def login_GCres(driver):
 	for i in range(MAX_RETRIES):
 		try:
 			driver.get(GCres_url)
+	
+			company_code = driver.find_element_by_id("qualifier")
+			username = driver.find_element_by_id("username")
+			password = driver.find_element_by_id("password")
 		except TimeoutException:
-			print('f.. GCres login page time out..')
-			return
-
-		company_code = driver.find_element_by_id("qualifier")
-		username = driver.find_element_by_id("username")
-		password = driver.find_element_by_id("password")
+			print('Error: f.. GCres login page time out..')
+			print('retry.. ' + str(i))
+			continue
+		except NoSuchElementException:
+			print('Error: f.. GCres login page not displaying properly?..')
+			print('retry.. ' + str(i))	
+			continue 
+		except WebDriverException:
+			print('Error: f.. GCres login WebDriverException..')
+			print('retry.. ' + str(i))	
+			continue
 
 		company_code.clear()
 		username.clear()
@@ -199,7 +208,7 @@ CONFIRMED = 'Confirmed or Completed'
 HOTEL_CONFIRMED = 'Confirmed (registered )'
 
 @click.command()
-@click.option('--filename', default='output_Search_item_hr_171013_1114.csv')
+@click.option('--filename', default='output_Search_item_hr_171027_1210.csv')
 # @click.option('--days', default=15, type=int)
 def hc(filename):
 
