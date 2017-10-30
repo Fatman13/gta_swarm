@@ -185,10 +185,12 @@ def asp_parallel(file_name, checkin_d, client):
 		for hotel in r_tree.find('.//HotelDetails'):
 			hotel_name = hotel.find('.//Item').text
 			for room_cat in r_tree.find('.//RoomCategories'):
-				print('Id: ' + str(room_cat.get('Id')))
-				print('Des: ' + str(room_cat.find('.//Description').text))
+				# print('Id: ' + str(room_cat.get('Id')))
+				# print('Des: ' + str(room_cat.find('.//Description').text))
 				entry = dict()
-				entry['GTA_key'] = hotel_code['city_code'] + '_' + hotel_code['item_code']
+				# entry['GTA_key'] = hotel_code['city_code'] + '_' + hotel_code['item_code']
+				entry['GTA_key'] = room_cat.find('.//City').get('Code') + '_' + room_cat.find('.//Item').get('Code')
+				
 				entry['Hotel_Name'] = hotel_name
 				entry['Room_Name'] = room_cat.find('.//Description').text
 				entry['Category_id'] = room_cat.get('Id')
