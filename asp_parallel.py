@@ -35,17 +35,18 @@ def has_item_price(r):
 		return False
 	return True
 
-def asp(request_body):
+def asp(s_request):
 	url = 'https://rbs.gta-travel.com/rbscnapi/RequestListenerServlet'
 	r = None
 	for i in range(MAX_RETRIES):
 		try:
-			r = requests.post(url, data=request_body, timeout=10)
+			r = requests.post(url, data=s_request['body'], timeout=10)
 			# retry if no price found?
 			# if not has_item_price(r):
 			# 	print('retry.. ' + str(i))
 			# 	continue
 			# print('request body: ' + str(request_body[301:322]))
+			print('Posting ' + str(s_request['GTA_key']))
 		except OSError:
 			print('Error: ignoring OSError...' + str(i))
 			continue
@@ -70,6 +71,46 @@ def asp_p(search_requests, threads=2):
 	pool.close()
 	pool.join()
 	return results
+
+# def process(responese):
+# 	if response == None:
+# 		return None
+# 	r_tree = ET.fromstring(response.text)
+# 	if r_tree.find('.//ItemPrice') == None:
+# 		return None
+# 	for hotel in r_tree.find('.//HotelDetails'):
+# 		hotel_name = hotel.find('.//Item').text
+# 		for room_cat in r_tree.find('.//RoomCategories'):
+# 			print('Id: ' + str(room_cat.get('Id')))
+# 			print('Des: ' + str(room_cat.find('.//Description').text))
+# 			entry = dict()
+# 			entry['GTA_key'] = hotel_code['city_code'] + '_' + hotel_code['item_code']
+# 			entry['Hotel_Name'] = hotel_name
+# 			entry['Room_Name'] = room_cat.find('.//Description').text
+# 			entry['Category_id'] = room_cat.get('Id')
+# 			entry['Breakfast'] = room_cat.find('.//Basis').get('Code')
+# 			entry['Policy'] = ''
+# 			for charge_condition in room_cat.find('.//ChargeConditions'):
+# 				if charge_condition.get('Type') == 'cancellation':
+# 					for conditoin in charge_condition:
+# 						if conditoin.get('Charge') == 'true':
+# 							entry['Policy'] += 'Charge(FromDay: ' + str(conditoin.get('FromDay')) + ' ToDay: ' + str(conditoin.get('ToDay')) + ') '
+# 						else:
+# 							entry['Policy'] += 'Free(FromDay: ' + str(conditoin.get('FromDay')) + ') '
+
+# 			entry['Check_in'] = checkin_date.strftime('%Y-%m-%d')
+# 			entry['Price'] = room_cat.find('.//ItemPrice').text
+# 			entry['Currency'] = room_cat.find('.//ItemPrice').get('Currency')
+# 			return entry
+# 			# res.append(entry)
+
+# def process_p(search_responses, threads=2):
+# 	pool = ThreadPool(threads)
+# 	results = pool.map(process, search_responses)
+# 	pool.close()
+# 	pool.join()
+# 	return results
+
 
 @click.command()
 @click.option('--file_name', default='gta_hotel_keys')
@@ -126,14 +167,18 @@ def asp_parallel(file_name, checkin_d, client):
 		search_tree.find('.//ItemCode').text = hotel_code['item_code']
 		search_tree.find('.//PaxRoom').set('Adults', str(2))
 		search_tree.find('.//CheckInDate').text = checkin_date.strftime('%Y-%m-%d')
-
-		search_requests.append(ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml'))
+		ent = {}
+		ent['GTA_key'] = '_'.join([hotel_code['city_code'], hotel_code['item_code']])
+		ent['body'] = ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml')
+		search_requests.append(ent)
 
 	# multi thread
 	responses = asp_p(search_requests, 4)
 
 	# process res
 	for response in responses:
+		if response == None:
+			continue
 		r_tree = ET.fromstring(response.text)
 		if r_tree.find('.//ItemPrice') == None:
 			continue
@@ -157,7 +202,7 @@ def asp_parallel(file_name, checkin_d, client):
 							else:
 								entry['Policy'] += 'Free(FromDay: ' + str(conditoin.get('FromDay')) + ') '
 
-				entry['Check_in'] = single_date.strftime('%Y-%m-%d')
+				entry['Check_in'] = checkin_date.strftime('%Y-%m-%d')
 				entry['Price'] = room_cat.find('.//ItemPrice').text
 				entry['Currency'] = room_cat.find('.//ItemPrice').get('Currency')
 				res.append(entry)
