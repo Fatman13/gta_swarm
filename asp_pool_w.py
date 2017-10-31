@@ -120,19 +120,21 @@ def asp_p(search_requests):
 
 @click.command()
 @click.option('--file_name', default='gta_hotel_keys')
-@click.option('--checkin_d', default='2017-11-19')
+# @click.option('--from_d', default='2017-11-19')
 # @click.option('--to_d', default='2017-11-20')
-@click.option('--client', default='ctrip')
-def asp_pool(file_name, checkin_d, client):
+@click.option('--client', default='tuniu')
+def asp_pool_w(file_name, client):
 	res = []
 	search_requests = []
 
-	try:
-		validate_d(checkin_d)
-	except ValueError:
-		print('Please input date in correct format..')
-		return
-	checkin_date = datetime.datetime.strptime(checkin_d, '%Y-%m-%d').date()
+	# try:
+	# 	validate_d(from_d)
+	# 	validate_d(to_d)
+	# except ValueError:
+	# 	print('Please input date in correct format..')
+	# 	return
+	# from_date = datetime.datetime.strptime(from_d, '%Y-%m-%d').date()
+	# to_date = datetime.datetime.strptime(to_d, '%Y-%m-%d').date()
 	print('Check in date ' + checkin_date.strftime('%Y-%m-%d'))
 
 	hotel_ids = set()
@@ -248,4 +250,4 @@ def asp_pool(file_name, checkin_d, client):
 
 if __name__ == '__main__':
 	multiprocessing.freeze_support()
-	asp_pool()
+	asp_pool_w()
