@@ -15,7 +15,8 @@ import json
 from requests.exceptions import ConnectionError
 from requests.exceptions import ChunkedEncodingError
 from requests.exceptions import ReadTimeout
-from multiprocessing.dummy import Pool as ThreadPool
+# from multiprocessing.dummy import Pool as ThreadPool
+from multiprocessing
 
 def validate_d(date_text):
 	try:
@@ -66,11 +67,14 @@ def asp(s_request):
 		print('Warning: Reached MAX RETRIES.. r==None.. ')
 	return r
 
-def asp_p(search_requests, threads=2):
-	pool = ThreadPool(threads)
-	results = pool.map(asp, search_requests)
-	pool.close()
-	pool.join()
+def asp_p(search_requests):
+	# pool = ThreadPool(threads)
+	# results = pool.map(asp, search_requests)
+	# pool.close()
+	# pool.join()
+	PROCESSES = 4
+	with multiprocessing.pool(PROCESSES) as pool:
+		results = pool.imap(asp, search_requests)
 	return results
 
 # def process(responese):
@@ -174,7 +178,7 @@ def asp_parallel(file_name, checkin_d, client):
 		search_requests.append(ent)
 
 	# multi thread
-	responses = asp_p(search_requests, 4)
+	responses = asp_p(search_requests)
 
 	# process res
 	for response in responses:
