@@ -49,7 +49,7 @@ def asp(s_request):
 			# 	continue
 			# print('request body: ' + str(request_body[301:322]))
 			# print('Posting ' + str(s_request['GTA_key']))
-			print('PPID: {} PID: {} GTA_key: {}'.format(os.getppid(), os.getpid(), str(s_request['GTA_key'])) )
+			print('PPID: {} PID: {} GTA_key: {} checkin: {}'.format(os.getppid(), os.getpid(), str(s_request['GTA_key']), s_request['checkin_date']) )
 		except OSError:
 			print('Error: ignoring OSError...' + str(i))
 			continue
@@ -119,13 +119,14 @@ def asp_p(search_requests):
 
 
 @click.command()
-@click.option('--file_name', default='gta_hotel_keys')
+@click.option('--file_name', default='tuniu_hotel_list.csv')
 # @click.option('--from_d', default='2017-11-19')
 # @click.option('--to_d', default='2017-11-20')
 @click.option('--client', default='tuniu')
 def asp_pool_w(file_name, client):
 	res = []
 	search_requests = []
+	DAYS = 30
 
 	# try:
 	# 	validate_d(from_d)
@@ -133,24 +134,35 @@ def asp_pool_w(file_name, client):
 	# except ValueError:
 	# 	print('Please input date in correct format..')
 	# 	return
-	# from_date = datetime.datetime.strptime(from_d, '%Y-%m-%d').date()
-	# to_date = datetime.datetime.strptime(to_d, '%Y-%m-%d').date()
-	print('Check in date ' + checkin_date.strftime('%Y-%m-%d'))
+	from_date = datetime.datetime.now().date() # .strptime(from_d, '%Y-%m-%d').date()
+	to_date = from_date + datetime.timedelta(DAYS)
+	# print('Check in date ' + checkin_date.strftime('%Y-%m-%d'))
 
 	hotel_ids = set()
 	hotel_codes = []
-	with open(file_name, 'r') as file:
-		for line in file:
-			# pp.pprint(line)
-			if line in hotel_ids:
-				continue			
-			try:
-				city_code, item_code = line.rstrip().split('_')
-			except ValueError:
-				print('Warning: skipping GTA key.. ' + line.rstrip())
-				continue
-			hotel_codes.append(dict([('city_code', city_code), ('item_code', item_code)]))
-			hotel_ids.add(line)
+	with open(file_name, encoding='utf-8-sig') as csvfile:
+		ids = set()
+		reader = csv.DictReader(csvfile)
+		for row in reader:
+			if row['gta_key'] not in ids:
+				ent = {}
+				ent['gta_key'] = row['gta_key']
+				try:
+					city_code, item_code = row['gta_key'].rstrip().split('_')
+				except ValueError:
+					print('Warning: skipping GTA key.. ' + line.rstrip())
+					continue
+				ent['city_code'] = city_code
+				ent['item_code'] = item_code
+				ent['rooms'] = []
+				ent['rooms'].append(row['room_type'])
+				hotel_codes.append(ent)
+			else:
+				for ent in hotel_codes:
+					if ent['gta_key'] == row['gta_key']:
+						ent['rooms'].append(row['room_type'])
+						break
+			ids.add(row['gta_key'])
 
 	agent_secret = None
 	with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'secrets.json')) as data_file:    
@@ -174,11 +186,16 @@ def asp_pool_w(file_name, client):
 		search_tree.find('.//ItemDestination').set('DestinationCode', hotel_code['city_code'])
 		search_tree.find('.//ItemCode').text = hotel_code['item_code']
 		search_tree.find('.//PaxRoom').set('Adults', str(2))
-		search_tree.find('.//CheckInDate').text = checkin_date.strftime('%Y-%m-%d')
-		ent = {}
-		ent['GTA_key'] = '_'.join([hotel_code['city_code'], hotel_code['item_code']])
-		ent['body'] = ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml')
-		search_requests.append(ent)
+		# DateFormatResponse="true"
+		search_tree.find('.//IncludeChargeConditions').set('DateFormatResponse', 'true')
+		for single_date in daterange(from_date, to_date):
+			search_tree.find('.//CheckInDate').text = single_date.strftime('%Y-%m-%d')
+			ent = {}
+			# ent['GTA_key'] = '_'.join([hotel_code['city_code'], hotel_code['item_code']])
+			ent['GTA_key'] = hotel_code['gta_key']
+			ent['checkin_date'] = single_date.strftime('%Y-%m-%d')
+			ent['body'] = ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml')
+			search_requests.append(ent)
 
 	# multi thread
 	responses = asp_p(search_requests)
@@ -209,16 +226,16 @@ def asp_pool_w(file_name, client):
 				entry['Room_Name'] = room_cat.find('.//Description').text
 				entry['Category_id'] = room_cat.get('Id')
 				entry['Breakfast'] = room_cat.find('.//Basis').get('Code')
-				entry['Policy'] = ''
+				# entry['Policy'] = ''
 				for charge_condition in room_cat.find('.//ChargeConditions'):
 					if charge_condition.get('Type') == 'cancellation':
 						for conditoin in charge_condition:
 							if conditoin.get('Charge') == 'true':
-								entry['Policy'] += 'Charge(FromDay: ' + str(conditoin.get('FromDay')) + ' ToDay: ' + str(conditoin.get('ToDay')) + ') '
-							else:
-								entry['Policy'] += 'Free(FromDay: ' + str(conditoin.get('FromDay')) + ') '
+								entry['Check_in'] = str(conditoin.get('FromDate'))
+								break
+						break
 
-				entry['Check_in'] = checkin_date.strftime('%Y-%m-%d')
+				# entry['Check_in'] = checkin_date.strftime('%Y-%m-%d')
 				entry['Price'] = room_cat.find('.//ItemPrice').text
 				entry['Currency'] = room_cat.find('.//ItemPrice').get('Currency')
 				res.append(entry)
@@ -237,8 +254,7 @@ def asp_pool_w(file_name, client):
 			max_len = len(ent.keys())
 			keys = ent.keys()
 
-	output_file_name = '_'.join([ 'Output_search_price',
-									file_name,
+	output_file_name = '_'.join([ 'Output_search_price_w',
 									checkin_date.strftime('%y%m%d'),
 									datetime.datetime.now().strftime('%H%M')
 								]) + '.csv'
