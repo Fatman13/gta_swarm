@@ -130,6 +130,7 @@ def add_empty_ent(response, res):
 		ent['GTA_key'] = response['gta_key']
 		ent['Hotel_Name'] = response['hotel_name']	
 		ent['Room_Name'] = room
+		ent['Check_in'] = response['checkin_date']
 		res.append(ent)
 
 @click.command()
@@ -223,14 +224,14 @@ def asp_pool_w(file_name, client):
 			add_empty_ent(response, res)
 			continue
 		try:
-			r_tree = ET.fromstring(response.text)
+			r_tree = ET.fromstring(response['text'].text)
 		except ParseError:
 			add_empty_ent(response, res)
 			print('Warning: Parse error for..\n' + response.text)
 			continue
 		if r_tree.find('.//ItemPrice') == None:
 			add_empty_ent(response, res)
-			print('Warning: No item price..')
+			# print('Warning: No item price..')
 			continue
 		for hotel in r_tree.find('.//HotelDetails'):
 			hotel_name = hotel.find('.//Item').text
@@ -246,6 +247,8 @@ def asp_pool_w(file_name, client):
 				
 				entry['Hotel_Name'] = hotel_name
 				entry['Room_Name'] = room_cat.find('.//Description').text
+				if entry['Room_Name'] not in response['rooms']:
+					continue
 				entry['Category_id'] = room_cat.get('Id')
 				# entry['Breakfast'] = room_cat.find('.//Basis').get('Code')
 				# entry['Policy'] = ''
