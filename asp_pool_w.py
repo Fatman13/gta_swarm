@@ -29,7 +29,7 @@ def daterange(start_date, end_date):
     for n in range(int ((end_date - start_date).days)):
         yield start_date + datetime.timedelta(n)
 
-MAX_RETRIES = 2
+MAX_RETRIES = 3
 
 def has_item_price(r):
 	r_tree = ET.fromstring(r.text)
@@ -43,6 +43,9 @@ def asp(s_request):
 	for i in range(MAX_RETRIES):
 		try:
 			r = requests.post(url, data=s_request['body'], timeout=10)
+			if r == None:
+				print('retry.. ' + str(i))
+				continue
 			# retry if no price found?
 			# if not has_item_price(r):
 			# 	print('retry.. ' + str(i))
@@ -65,7 +68,7 @@ def asp(s_request):
 		else:
 			break
 	if r == None:
-		print('Warning: Reached MAX RETRIES.. r==None.. ')
+		print('Warning: Reached MAX RETRIES.. r == None.. ')
 
 	ent = {}
 	ent['gta_key'] = s_request['GTA_key']
@@ -138,10 +141,11 @@ def add_empty_ent(response, res):
 # @click.option('--from_d', default='2017-11-19')
 # @click.option('--to_d', default='2017-11-20')
 @click.option('--client', default='tuniu')
-def asp_pool_w(file_name, client):
+@click.option('--days', default=60)
+def asp_pool_w(file_name, client, days):
 	res = []
 	search_requests = []
-	DAYS = 30
+	# DAYS = 30
 
 	# try:
 	# 	validate_d(from_d)
@@ -150,7 +154,7 @@ def asp_pool_w(file_name, client):
 	# 	print('Please input date in correct format..')
 	# 	return
 	from_date = datetime.datetime.now().date() # .strptime(from_d, '%Y-%m-%d').date()
-	to_date = from_date + datetime.timedelta(DAYS)
+	to_date = from_date + datetime.timedelta(days)
 	# print('Check in date ' + checkin_date.strftime('%Y-%m-%d'))
 
 	hotel_ids = set()
@@ -238,6 +242,8 @@ def asp_pool_w(file_name, client):
 			# gta_key = hotel.find('.//City').get('Code') + '_' + hotel.find('.//Item').get('Code')
 			gta_key = response['gta_key']
 
+			rooms = set()
+
 			for room_cat in r_tree.find('.//RoomCategories'):
 				# print('Id: ' + str(room_cat.get('Id')))
 				# print('Des: ' + str(room_cat.find('.//Description').text))
@@ -249,6 +255,9 @@ def asp_pool_w(file_name, client):
 				entry['Room_Name'] = room_cat.find('.//Description').text
 				if entry['Room_Name'] not in response['rooms']:
 					continue
+				if entry['Room_Name'] in rooms:
+					continue
+				rooms.add(entry['Room_Name'])
 				entry['Category_id'] = room_cat.get('Id')
 				# entry['Breakfast'] = room_cat.find('.//Basis').get('Code')
 				# entry['Policy'] = ''
