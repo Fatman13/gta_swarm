@@ -66,7 +66,14 @@ def asp(s_request):
 			break
 	if r == None:
 		print('Warning: Reached MAX RETRIES.. r==None.. ')
-	return r
+
+	ent = {}
+	ent['gta_key'] = s_request['GTA_key']
+	ent['rooms'] = s_request['rooms']
+	ent['checkin_date'] = s_request['checkin_date']
+	ent['hotel_name'] = s_request['hotel_name']
+	ent['text'] = r
+	return ent
 
 def asp_p(search_requests):
 	# pool = ThreadPool(threads)
@@ -117,6 +124,13 @@ def asp_p(search_requests):
 # 	pool.join()
 # 	return results
 
+def add_empty_ent(response, res):
+	for room in response['rooms']:
+		ent = {}
+		ent['GTA_key'] = response['gta_key']
+		ent['Hotel_Name'] = response['hotel_name']	
+		ent['Room_Name'] = room
+		res.append(ent)
 
 @click.command()
 @click.option('--file_name', default='tuniu_hotel_list.csv')
@@ -154,6 +168,7 @@ def asp_pool_w(file_name, client):
 					continue
 				ent['city_code'] = city_code
 				ent['item_code'] = item_code
+				ent['hotel_name'] = row['hotel_name']
 				ent['rooms'] = []
 				ent['rooms'].append(row['room_type'])
 				hotel_codes.append(ent)
@@ -194,6 +209,8 @@ def asp_pool_w(file_name, client):
 			# ent['GTA_key'] = '_'.join([hotel_code['city_code'], hotel_code['item_code']])
 			ent['GTA_key'] = hotel_code['gta_key']
 			ent['checkin_date'] = single_date.strftime('%Y-%m-%d')
+			ent['rooms'] = hotel_code['rooms']
+			ent['hotel_name'] = hotel_code['hotel_name']
 			ent['body'] = ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml')
 			search_requests.append(ent)
 
@@ -202,18 +219,23 @@ def asp_pool_w(file_name, client):
 
 	# process res
 	for response in responses:
-		if response == None:
+		if response['text'] == None:
+			add_empty_ent(response, res)
 			continue
 		try:
 			r_tree = ET.fromstring(response.text)
 		except ParseError:
+			add_empty_ent(response, res)
 			print('Warning: Parse error for..\n' + response.text)
 			continue
 		if r_tree.find('.//ItemPrice') == None:
+			add_empty_ent(response, res)
+			print('Warning: No item price..')
 			continue
 		for hotel in r_tree.find('.//HotelDetails'):
 			hotel_name = hotel.find('.//Item').text
-			gta_key = hotel.find('.//City').get('Code') + '_' + hotel.find('.//Item').get('Code')
+			# gta_key = hotel.find('.//City').get('Code') + '_' + hotel.find('.//Item').get('Code')
+			gta_key = response['gta_key']
 
 			for room_cat in r_tree.find('.//RoomCategories'):
 				# print('Id: ' + str(room_cat.get('Id')))
@@ -225,27 +247,28 @@ def asp_pool_w(file_name, client):
 				entry['Hotel_Name'] = hotel_name
 				entry['Room_Name'] = room_cat.find('.//Description').text
 				entry['Category_id'] = room_cat.get('Id')
-				entry['Breakfast'] = room_cat.find('.//Basis').get('Code')
+				# entry['Breakfast'] = room_cat.find('.//Basis').get('Code')
 				# entry['Policy'] = ''
-				for charge_condition in room_cat.find('.//ChargeConditions'):
-					if charge_condition.get('Type') == 'cancellation':
-						for conditoin in charge_condition:
-							if conditoin.get('Charge') == 'true':
-								entry['Check_in'] = str(conditoin.get('FromDate'))
-								break
-						break
+				# for charge_condition in room_cat.find('.//ChargeConditions'):
+				# 	if charge_condition.get('Type') == 'cancellation':
+				# 		for conditoin in charge_condition:
+				# 			if conditoin.get('Charge') == 'true':
+				# 				entry['Check_in'] = str(conditoin.get('FromDate'))
+				# 				break
+				# 		break
 
 				# entry['Check_in'] = checkin_date.strftime('%Y-%m-%d')
+				entry['Check_in'] = response['checkin_date']
 				entry['Price'] = room_cat.find('.//ItemPrice').text
 				entry['Currency'] = room_cat.find('.//ItemPrice').get('Currency')
 				res.append(entry)
 
-	gta_keys = [ ent['GTA_key'] for ent in res ]
-	for hotel_id in hotel_ids:
-		if hotel_id not in get_keys:
-			ent = {}
-			ent['GTA_key'] = hotel_id
-			res.append(ent)
+	# gta_keys = [ ent['GTA_key'] for ent in res ]
+	# for hotel_id in hotel_ids:
+	# 	if hotel_id not in get_keys:
+	# 		ent = {}
+	# 		ent['GTA_key'] = hotel_id
+	# 		res.append(ent)
 
 	keys = None
 	max_len = 0
@@ -255,7 +278,7 @@ def asp_pool_w(file_name, client):
 			keys = ent.keys()
 
 	output_file_name = '_'.join([ 'Output_search_price_w',
-									checkin_date.strftime('%y%m%d'),
+									datetime.datetime.now().strftime('%y%m%d'),
 									datetime.datetime.now().strftime('%H%M')
 								]) + '.csv'
 	# keys = res[0].keys()
