@@ -37,12 +37,7 @@ def dump_csv(res, output_filename, from_date):
 @click.option('--filename', default='output_ctrip_update_res_no_')
 @click.option('--email', default='no-reply@gta-travel.com')
 def sendmail_win_cs(filename, email):
-
-	# today_date = datetime.datetime.today().date()
-
 	target_filename = filename + '*.csv'
-
-	# newest = max(glob.iglob('output_hotel_ref_*.csv'), key=os.path.getctime)
 	newest = max(glob.iglob(target_filename), key=os.path.getctime)
 	print('newest file: ' + newest)
 	today_date = datetime.datetime.now().strftime('%y%m%d')
@@ -55,33 +50,23 @@ def sendmail_win_cs(filename, email):
 		print('Error: newest date != today date.. mannual intervention needed..')
 		return
 
-	# print('newest date: ' + newest_date)
-
 	print('Setting account..')
 	# Username in WINDOMAIN\username format. Office365 wants usernames in PrimarySMTPAddress
 	# ('myusername@example.com') format. UPN format is also supported.
 	credentials = Credentials(username='APACNB\\809452', password=sendmail_secret['password'])
-	# credentials = ServiceAccount(username='APACNB\\809452', password=sendmail_secret['password'])
 
 	print('Discovering..')
 
 	# If the server doesn't support autodiscover, use a Configuration object to set the server
 	# location:
-	# config = Configuration(server='outlookuk.kuoni.int', credentials=credentials)
 	config = Configuration(server='emailuk.kuoni.com', credentials=credentials)
 
 	try:
 		account = Account(primary_smtp_address=email, config=config,
 					autodiscover=False, access_type=DELEGATE)
-		# account = Account(primary_smtp_address=email, config=config,
-		# 			autodiscover=False, access_type=IMPERSONATION)
 	except ConnectionError as e:
 		print('Fatal: Connection Error.. aborted..')
 		return
-
-	# Set up a target account and do an autodiscover lookup to find the target EWS endpoint:
-	# account = Account(primary_smtp_address='yu.leng@gta-travel.com', credentials=credentials,
-				#autodiscover=True, access_type=DELEGATE)
 
 	print('Logged in as: ' + str(email))
 
