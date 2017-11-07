@@ -259,7 +259,7 @@ def asp_pool_w(file_name, client, days):
 					continue
 				rooms.add(entry['Room_Name'])
 				entry['Category_id'] = room_cat.get('Id')
-				# entry['Breakfast'] = room_cat.find('.//Basis').get('Code')
+				entry['Breakfast'] = room_cat.find('.//Basis').get('Code')
 				# entry['Policy'] = ''
 				# for charge_condition in room_cat.find('.//ChargeConditions'):
 				# 	if charge_condition.get('Type') == 'cancellation':

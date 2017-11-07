@@ -34,6 +34,9 @@ This is a collection of python scripts for daily routines of testing GTA API and
 27. [ctripref_stats_gai.py](#) - Take data from `ctrip_store_booking.py` to have the stats of hotel ref coverage
 28. [sendmail_win.py](#) - A imporved example of how you can send emails by a Exchange Server account
 29. [asp_parallel.py](#) - Multi thread version of `asp.py`
+29. [asp_pool_w.py](#) - Multi process version of `asp.py` using pool
+30. [sendmail_win_cs.py](#) - Example of sending email with attachment (Exchange server)
+31. [ctripref_stat_v.ipynb](#) - notebook for Ctrip hotel ref stats 
 
 # Question?
 
