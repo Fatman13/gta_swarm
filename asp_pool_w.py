@@ -242,7 +242,7 @@ def asp_pool_w(file_name, client, days):
 			# gta_key = hotel.find('.//City').get('Code') + '_' + hotel.find('.//Item').get('Code')
 			gta_key = response['gta_key']
 
-			rooms = set()
+			# rooms = set()
 
 			for room_cat in r_tree.find('.//RoomCategories'):
 				# print('Id: ' + str(room_cat.get('Id')))
@@ -255,9 +255,9 @@ def asp_pool_w(file_name, client, days):
 				entry['Room_Name'] = room_cat.find('.//Description').text
 				if entry['Room_Name'] not in response['rooms']:
 					continue
-				if entry['Room_Name'] in rooms:
-					continue
-				rooms.add(entry['Room_Name'])
+				# if entry['Room_Name'] in rooms:
+					# continue
+				# rooms.add(entry['Room_Name'])
 				entry['Category_id'] = room_cat.get('Id')
 				entry['Breakfast'] = room_cat.find('.//Basis').get('Code')
 				# entry['Policy'] = ''
