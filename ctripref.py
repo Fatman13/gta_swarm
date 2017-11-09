@@ -111,7 +111,7 @@ def ctripref(days, duration):
 	subprocess.call(['python', 'ctrip_store_booking.py', '--filename', newest, '--days', '-30', '--output', 'output_ctrip_booking_store.csv'])
 
 	subprocess.call(['python', 'sendmail_win_cs.py', 
-						'--filename', 'output_ctrip_update_res_no_', 
+						'--filename', 'output_hotel_ref_', 
 						'--email', 'no-reply@gta-travel.com'])
 
 if __name__ == '__main__':

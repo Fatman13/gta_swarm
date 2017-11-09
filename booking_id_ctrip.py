@@ -45,7 +45,7 @@ def booking_id_ctrip(days, duration, d_type):
 	url = 'https://rbs.gta-travel.com/rbscnapi/RequestListenerServlet'
 	pp = pprint
 	res = []
-	clients = ['ctrip', 'ctrip_di']
+	clients = ['ctrip', 'ctrip_di', 'ctrip_dd']
 
 	# validate_d(from_d)
 	# validate_d(to_d)

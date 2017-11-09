@@ -66,6 +66,11 @@ def asp(s_request):
 			break
 	if r == None:
 		print('Warning: Reached MAX RETRIES.. r==None.. ')
+
+	# ent = {}
+	# ent['gta_key'] = s_request['GTA_key']
+	# ent['text'] = r
+	# return ent
 	return r
 
 def asp_p(search_requests):
@@ -117,10 +122,15 @@ def asp_p(search_requests):
 # 	pool.join()
 # 	return results
 
+def add_empty_ent(response, checkin_date, res):
+	ent = {}
+	ent['GTA_key'] = response['gta_key']
+	ent['Check_in'] = checkin_date.strftime('%Y-%m-%d')
+	res.append(ent)
 
 @click.command()
 @click.option('--file_name', default='gta_hotel_keys')
-@click.option('--checkin_d', default='2017-11-19')
+@click.option('--checkin_d', default='2017-11-22')
 # @click.option('--to_d', default='2017-11-20')
 @click.option('--client', default='ctrip')
 def asp_pool(file_name, checkin_d, client):
@@ -191,6 +201,7 @@ def asp_pool(file_name, checkin_d, client):
 			print('Warning: Parse error for..\n' + response.text)
 			continue
 		if r_tree.find('.//ItemPrice') == None:
+			# add_empty_ent(response, checkin_date, res)
 			continue
 		for hotel in r_tree.find('.//HotelDetails'):
 			hotel_name = hotel.find('.//Item').text
@@ -222,10 +233,13 @@ def asp_pool(file_name, checkin_d, client):
 				res.append(entry)
 
 	gta_keys = [ ent['GTA_key'] for ent in res ]
+	# print(str(gta_keys))
 	for hotel_id in hotel_ids:
-		if hotel_id not in get_keys:
+		if hotel_id != '' and hotel_id not in gta_keys:
+			# print(hotel_id)
 			ent = {}
-			ent['GTA_key'] = hotel_id
+			ent['GTA_key'] = hotel_id.strip()
+			ent['Check_in'] = checkin_date.strftime('%Y-%m-%d')
 			res.append(ent)
 
 	keys = None
