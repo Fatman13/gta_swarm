@@ -20,6 +20,7 @@ search_item_info*
 gta_hotel_keys
 remove_csv.py
 *.json
+hist.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
