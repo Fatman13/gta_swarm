@@ -132,7 +132,7 @@ def add_empty_ent(response, checkin_date, res):
 @click.option('--file_name', default='gta_hotel_keys')
 @click.option('--checkin_d', default='2017-11-22')
 # @click.option('--to_d', default='2017-11-20')
-@click.option('--client', default='ctrip')
+@click.option('--client', default='ctrip_b2b')
 def asp_pool(file_name, checkin_d, client):
 	res = []
 	search_requests = []

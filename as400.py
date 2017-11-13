@@ -32,7 +32,7 @@ def dump_csv(res, filename):
 		dict_writer.writerows(res)
 
 clients = { 'Qunar': '5840, 5576, 5673',
-			'Ctrip': '5867, 5966',
+			'Ctrip': '5867, 5966, 5997',
 			'Haoqiao': '5549, 5682', 
 			'Dida': '5162, 5406',
 			'Hotel_Travel_17': '7598, 7182, 7793',
