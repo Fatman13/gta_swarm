@@ -16,6 +16,7 @@ import copy
 # import os
 # import json
 # import logging
+from xml.etree.ElementTree import ParseError
 
 def validate_d(date_text):
 	try:
@@ -140,7 +141,11 @@ def searh_item_hr(filename, client):
 			pp.pprint('Error: OSError.. Searching has stopped..')
 			continue
 
-		r_tree = ET.fromstring(r.text)
+		try:
+			r_tree = ET.fromstring(r.text)
+		except ParseError:
+			print('Error: parsing error.. skip..')
+			continue
 
 		items_ele = r_tree.find('.//BookingItems')
 		if items_ele == None:
