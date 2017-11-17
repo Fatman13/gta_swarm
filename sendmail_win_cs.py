@@ -74,7 +74,9 @@ def sendmail_win_cs(filename, email):
 	recipient_email1 = 'Alex.Sha@gta-travel.com'
 	recipient_email2 = 'will.he@gta-travel.com'
 	recipient_email3 = 'Crystal.liu@gta-travel.com'
-	body_text = 'FYI'
+	body_text = 'FYI\n' + 
+				'Best\n' +
+				'-Yu'
 	title_text = '[[[ Ctrip hotel reference ]]]'
 
 	# Or, if you want a copy in e.g. the 'Sent' folder
