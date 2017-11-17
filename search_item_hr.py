@@ -53,7 +53,7 @@ def is_bad_hotel(city_code, item_code):
 	return False
 
 @click.command()
-@click.option('--filename', default='output_Search_booking_id_171020_0000_0d_t.csv')
+@click.option('--filename', default='output_Search_booking_id_171117_1000_2d.csv')
 @click.option('--client', default='ctrip')
 # @click.option('--days', default=1, type=int)
 def searh_item_hr(filename, client):
@@ -70,6 +70,15 @@ def searh_item_hr(filename, client):
 		agent_secret = json.load(data_file)
 
 	print('Search client.. ' + client)
+
+	bookings_c = []
+	with open('output_ctrip_booking_store.csv', encoding='utf-8-sig') as csvfile:
+		ids = set()
+		reader = csv.DictReader(csvfile)
+		for row in reader:
+			if row['gta_api_booking_id'] not in ids:
+				bookings_c.append(row['gta_api_booking_id'])
+			ids.add(row['gta_api_booking_id'])
 
 	bookings = []
 	res = []
@@ -107,6 +116,10 @@ def searh_item_hr(filename, client):
 	for counter, booking in enumerate(bookings):
 		pp.pprint('Searching booking id: ' + str(counter) + ': ' + booking['gta_api_booking_id'])
 
+		if booking['gta_api_booking_id'] in bookings_c:
+			print('Warning: already pushed to Ctrip.. skip..')
+			continue
+
 		if 'client_name' not in booking.keys():
 			print('Error: No client name...')
 			continue
@@ -136,7 +149,7 @@ def searh_item_hr(filename, client):
 			search_request.find('.//BookingReference').text = booking_id
 
 		try:
-			r = requests.post(url, data=ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml'), timeout=600)
+			r = requests.post(url, data=ET.tostring(search_tree.getroot(), encoding='UTF-8', method='xml'), timeout=10)
 		except OSError:
 			pp.pprint('Error: OSError.. Searching has stopped..')
 			continue
