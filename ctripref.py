@@ -78,7 +78,8 @@ def ctripref(days, duration):
 	if is_bad_date_re('output_Search_item_hr_(\d+)', newest):
 		print('Error: bad date.. ')
 		return
-	subprocess.call(['python', 'hc.py', '--filename', newest])
+	# subprocess.call(['python', 'hc.py', '--filename', newest])
+	subprocess.call(['python', 'hc_pool.py', '--filename', newest])
 
 	hua_style_sleep()
 
