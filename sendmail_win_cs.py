@@ -34,7 +34,7 @@ def dump_csv(res, output_filename, from_date):
 		dict_writer.writerows(res)
 
 @click.command()
-@click.option('--filename', default='output_ctrip_update_res_no_')
+@click.option('--filename', default='output_hotel_ref_')
 @click.option('--email', default='no-reply@gta-travel.com')
 def sendmail_win_cs(filename, email):
 	target_filename = filename + '*.csv'
@@ -74,8 +74,8 @@ def sendmail_win_cs(filename, email):
 	recipient_email1 = 'Alex.Sha@gta-travel.com'
 	recipient_email2 = 'will.he@gta-travel.com'
 	recipient_email3 = 'Crystal.liu@gta-travel.com'
-	body_text = 'FYI\n' + 
-				'Best\n' +
+	body_text = 'FYI\n' + \
+				'Best\n' + \
 				'-Yu'
 	title_text = '[[[ Ctrip hotel reference ]]]'
 
