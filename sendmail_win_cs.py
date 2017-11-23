@@ -74,6 +74,8 @@ def sendmail_win_cs(filename, email):
 	recipient_email1 = 'Alex.Sha@gta-travel.com'
 	recipient_email2 = 'will.he@gta-travel.com'
 	recipient_email3 = 'Crystal.liu@gta-travel.com'
+	recipient_email4 = 'lily.yu@gta-travel.com'
+	recipient_email5 = 'intern.shanghai@gta-travel.com'
 	body_text = 'FYI\n' + \
 				'Best\n' + \
 				'-Yu'
@@ -89,7 +91,9 @@ def sendmail_win_cs(filename, email):
 		body=body_text,
 		to_recipients=[Mailbox(email_address=recipient_email1),
 						Mailbox(email_address=recipient_email2),
-						Mailbox(email_address=recipient_email3)]
+						Mailbox(email_address=recipient_email3),
+						Mailbox(email_address=recipient_email4),
+						Mailbox(email_address=recipient_email5)]
 		)
 
 	with open(newest, 'rb') as f:
