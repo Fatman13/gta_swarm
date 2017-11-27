@@ -91,9 +91,10 @@ def sendmail_win_cs(filename, email):
 		body=body_text,
 		to_recipients=[Mailbox(email_address=recipient_email1),
 						Mailbox(email_address=recipient_email2),
-						Mailbox(email_address=recipient_email3),
-						Mailbox(email_address=recipient_email4),
-						Mailbox(email_address=recipient_email5)]
+						Mailbox(email_address=recipient_email3)
+						# Mailbox(email_address=recipient_email4),
+						# Mailbox(email_address=recipient_email5)
+						]
 		)
 
 	with open(newest, 'rb') as f:
