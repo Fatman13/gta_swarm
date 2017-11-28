@@ -17,6 +17,7 @@ import copy
 # import json
 # import logging
 import re
+from xml.etree.ElementTree import ParseError
 
 def validate_d(date_text):
 	try:
@@ -239,7 +240,11 @@ def ctrip_update_res_no(filename):
 			res.append(booking)
 			continue
 
-		r_tree = ET.fromstring(r.text)
+		try:
+			r_tree = ET.fromstring(r.text)
+		except ParseError:
+			print('Error: parse error..')
+			continue
 
 		# pp.pprint('r_text: ' + r.text)
 		# pp.pprint('r: ' + r)

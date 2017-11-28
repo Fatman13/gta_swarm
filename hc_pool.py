@@ -294,7 +294,7 @@ def hotel_conf_pool(bookings):
 	return results
 
 @click.command()
-@click.option('--filename', default='test_hc.csv')
+@click.option('--filename', default='output_Search_item_hr_171127_1032.csv')
 # @click.option('--days', default=15, type=int)
 def hc_pool(filename):
 	bookings = []
@@ -342,9 +342,10 @@ def hc_pool(filename):
 	# print(results)
 
 	for rt in results:
-		for ent in rt:
-			ent.pop('cookies')
-			res.append(ent)
+		if rt is not None:
+			for ent in rt:
+				ent.pop('cookies')
+				res.append(ent)
 	# print(res)
 
 	driver.quit()
