@@ -157,7 +157,7 @@ def searh_item_hr(filename, client):
 		try:
 			r_tree = ET.fromstring(r.text)
 		except ParseError:
-			print('Error: parsing error.. skip..')
+			print('Error: parsing error.. skip.. 1')
 			continue
 
 		items_ele = r_tree.find('.//BookingItems')

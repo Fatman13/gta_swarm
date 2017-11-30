@@ -36,7 +36,8 @@ clients = { 'Qunar': '5840, 5576, 5673',
 			'Haoqiao': '5549, 5682', 
 			'Dida': '5162, 5406',
 			'Hotel_Travel_17': '7598, 7182, 7793',
-			'Hotel_Travel_28': '1123' }
+			'Hotel_Travel_28': '1123',
+			'StarTravel': '4733' }
 
 @click.command()
 # @click.option('--country', default='Canada')
