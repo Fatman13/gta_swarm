@@ -173,7 +173,7 @@ def ctrip_update_res_no(filename):
 					gta_api_ids_exclu.append(row['gta_api_booking_id'])
 				ids.add(row['gta_api_booking_id'])
 	except FileNotFoundError:
-		print('Error: file not found.. bye.. ')
+		print('Error: file not found.. bye.. 1')
 		return
 
 	search_tree = ET.parse(os.path.join(os.getcwd(), 'CtripHotelResNumUpdateRQ.xml'))
