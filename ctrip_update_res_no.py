@@ -215,7 +215,7 @@ def ctrip_update_res_no(filename):
 				res_id.set('ResID_Value', booking['gta_api_booking_id'].replace('041/', ''))
 			if res_id.get('ResID_Type') == '504':
 				res_id.set('ResID_Value', ','.join(booking['hotel_confirmation_#']))
-				print(res_id.get('ResID_Value'))				
+				# print(res_id.get('ResID_Value'))				
 
 		try:
 			r = requests.post(url, data=ET.tostring(search_tree.getroot(), encoding='UTF-8'), headers=headers, timeout=60)
