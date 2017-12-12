@@ -37,6 +37,7 @@ This is a collection of python scripts for daily routines of testing GTA API and
 29. [asp_pool_w.py](#) - Multi process version of `asp.py` using pool
 30. [sendmail_win_cs.py](#) - Example of sending email with attachment (Exchange server)
 31. [ctripref_stat_v.ipynb](#) - notebook for Ctrip hotel ref stats 
+32. [fault_http.py](#) - Example of reading Triometrics xls
 
 # Question?
 
