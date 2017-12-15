@@ -75,7 +75,8 @@ def sendmail_win_cs(filename, email):
 	recipient_email2 = 'will.he@gta-travel.com'
 	recipient_email3 = 'Crystal.liu@gta-travel.com'
 	recipient_email4 = 'lily.yu@gta-travel.com'
-	recipient_email5 = 'intern.shanghai@gta-travel.com'
+	recipient_email6 = 'intern.shanghai@gta-travel.com'
+	recipient_email5 = 'Emilie.wang@gta-travel.com'
 	body_text = 'FYI\n' + \
 				'Best\n' + \
 				'-Yu'
@@ -89,11 +90,17 @@ def sendmail_win_cs(filename, email):
 		author=Mailbox(email_address=email),
 		subject=title_text,
 		body=body_text,
+		# to_recipients=[Mailbox(email_address=recipient_email1),
+		# 				Mailbox(email_address=recipient_email2),
+		# 				Mailbox(email_address=recipient_email3)
+		# 				# Mailbox(email_address=recipient_email4),
+		# 				# Mailbox(email_address=recipient_email5)
+		# 				]
 		to_recipients=[Mailbox(email_address=recipient_email1),
 						Mailbox(email_address=recipient_email2),
-						Mailbox(email_address=recipient_email3)
-						# Mailbox(email_address=recipient_email4),
-						# Mailbox(email_address=recipient_email5)
+						Mailbox(email_address=recipient_email3),
+						Mailbox(email_address=recipient_email4),
+						Mailbox(email_address=recipient_email5)
 						]
 		)
 

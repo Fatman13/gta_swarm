@@ -200,11 +200,11 @@ def ctrip_update_res_no(filename):
 			print('Booking canceled .. skipping..')
 			continue
 
-		if not isValid(list(booking['hotel_confirmation_#'])):
-			print('Warning: Confirmation # not valid.. ' + str(booking['hotel_confirmation_#']))
-			booking['Ctrip_update_API'] = 'not sent to ctrip'
-			res.append(booking)
-			continue
+		# if not isValid(list(booking['hotel_confirmation_#'])):
+		# 	print('Warning: Confirmation # not valid.. ' + str(booking['hotel_confirmation_#']))
+		# 	booking['Ctrip_update_API'] = 'not sent to ctrip'
+		# 	res.append(booking)
+		# 	continue
 
 		for res_id in search_tree.find('.//{http://www.opentravel.org/OTA/2003/05}HotelReservationIDs'):
 			if res_id.get('ResID_Type') == '501':
