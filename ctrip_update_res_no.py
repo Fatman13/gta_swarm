@@ -67,6 +67,7 @@ REF_AGENT = 'agent'
 
 CONFIRMED = 'Confirmed or Completed'
 CANCELLED = 'Cancelled (to register)'
+REGISTERED = 'Confirmed (registered )'
 
 def is_bad_date(filename_regex, newest):
 	today_date = datetime.datetime.now().strftime('%y%m%d')
@@ -187,6 +188,10 @@ def ctrip_update_res_no(filename):
 		if booking['gta_api_booking_id'] in gta_api_ids_exclu:
 			print('Booking has already being pushed to Ctrip API once.. ')
 			continue
+
+		if booking['hotel_confirmation_status'] == REGISTERED and len(booking['hotel_confirmation_#']) == 0:
+			print('Registered but no hotel conf..')
+			booking['hotel_confirmation_#'].append('confirmed')
 
 		if len(booking['hotel_confirmation_#']) == 0:
 			print('booking confirmation # len == 0 .. skipping..')
