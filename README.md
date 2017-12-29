@@ -38,6 +38,7 @@ This is a collection of python scripts for daily routines of testing GTA API and
 30. [sendmail_win_cs.py](#) - Example of sending email with attachment (Exchange server)
 31. [ctripref_stat_v.ipynb](#) - notebook for Ctrip hotel ref stats 
 32. [fault_http.py](#) - Example of reading Triometrics xls
+32. [steemit.py](#) - views?
 
 # Question?
 
