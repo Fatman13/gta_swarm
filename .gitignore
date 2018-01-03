@@ -21,6 +21,7 @@ gta_hotel_keys
 remove_csv.py
 *.json
 hist.txt
+bookings
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
