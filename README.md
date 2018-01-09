@@ -39,6 +39,7 @@ This is a collection of python scripts for daily routines of testing GTA API and
 31. [ctripref_stat_v.ipynb](#) - notebook for Ctrip hotel ref stats 
 32. [fault_http.py](#) - Example of reading Triometrics xls
 32. [steemit.py](#) - views?
+33. [pname_pool.py](#) - Get pax names from bookings
 
 # Question?
 

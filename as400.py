@@ -33,6 +33,8 @@ def dump_csv(res, filename):
 
 clients = { 'Qunar': '5840, 5576, 5673',
 			'Ctrip': '5867, 5966, 5997',
+			'ctrip_di': '5997',
+			'hlt': '5148',
 			'Haoqiao': '5549, 5682', 
 			'Dida': '5162, 5406',
 			'Hotel_Travel_17': '7598, 7182, 7793',
@@ -41,7 +43,7 @@ clients = { 'Qunar': '5840, 5576, 5673',
 
 @click.command()
 # @click.option('--country', default='Canada')
-@click.option('--client', default='Ctrip')
+@click.option('--client', default='hlt')
 @click.option('--site', default='41')
 def as400(client, site):
 
