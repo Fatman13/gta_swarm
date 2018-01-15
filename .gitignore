@@ -22,6 +22,7 @@ remove_csv.py
 *.json
 hist.txt
 bookings
+f_p_a_c*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

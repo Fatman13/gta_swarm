@@ -330,16 +330,23 @@ def hc_pool(filename):
 
 	driver = webdriver.Firefox()
 	driver.implicitly_wait(10)
-	print('Logging in..')
-	cookies = login_GCres(driver)
-
-	for booking in bookings:
-		booking['cookies'] = cookies
-
-	results = hotel_conf_pool(bookings)
+	
 	# print(results)
 	# results = filter(None, res)
 	# print(results)
+
+	i = 0
+	results = []
+	INTERVAL = 600
+	while i*INTERVAL < len(bookings):
+		print('Logging in..')
+		cookies = login_GCres(driver)
+
+		for booking in bookings:
+			booking['cookies'] = cookies
+
+		results.append(hotel_conf_pool(bookings[i*INTERVAL:(i+1)*INTERVAL]))
+		i = i + 1
 
 	for rt in results:
 		if rt is not None:
