@@ -127,8 +127,8 @@ def add_empty_ent(response, checkin_date, res):
 	res.append(ent)
 
 @click.command()
-@click.option('--file_name', default='f_p_a_c_cmd')
-@click.option('--client', default='lefei')
+@click.option('--file_name', default='f_p_a_c_qunar')
+@click.option('--client', default='qunar')
 @click.option('--days', default=20, type=int)
 def pcheck_pool(file_name, client, days):
 	res = []
