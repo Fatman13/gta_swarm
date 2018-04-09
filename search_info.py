@@ -90,12 +90,20 @@ def search_info(filename, client):
 		entry['GTA_key'] = hotel_code['city_code'] + '_' + hotel_code['item_code']
 		entry['hotel_name'] = ''
 		entry['hotel_email'] = ''
+		entry['Latitude'] = ''
+		entry['Longitude'] = ''
 		name_ele = r_tree.find('.//Item')
 		if name_ele != None:
 			entry['hotel_name'] = r_tree.find('.//Item').text
 		email_ele = r_tree.find('.//EmailAddress')
 		if email_ele != None:
 			entry['hotel_email'] = r_tree.find('.//EmailAddress').text
+		geo_ele = r_tree.find('.//Latitude')
+		if geo_ele != None:
+			entry['Latitude'] = r_tree.find('.//Latitude').text
+		geo_ele = r_tree.find('.//Longitude')
+		if geo_ele != None:
+			entry['Longitude'] = r_tree.find('.//Longitude').text
 		res.append(entry)
 
 	# keys = res[0].keys()
