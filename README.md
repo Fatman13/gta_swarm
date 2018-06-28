@@ -46,6 +46,7 @@ This is a collection of python scripts for daily routines of testing GTA API and
 37. [hb_report.py](#) - Run sendmail_win_hb to grab email attachment from inbox; Run hr_er to do analytics; send result to relevant parties using sendmail_win_hb2
 38. [sendmail_win_hb.py](#) - Download appropriate pa log file from my inbox and save it
 39. [sendmail_win_hb2.py](#) - Send result to relevant parties
+40. [booking_count.py](#) - Count number of bookings of a client
 
 # Question?
 

@@ -76,7 +76,7 @@ def sendmail_win_hb2(filename, email):
 	recipient_email3 = 'lwang@hotelbeds.com'
 	recipient_email4 = 'kfu@hotelbeds.com'
 	body_text = 'FYI\n' + \
-				'For chain offline recommendation, please open the attachment and filter \"recommend_offline\" by \"yes\".\n' + \
+				'For chain offline recommendation, please open the attachment and filter \"recommend_offline\" column by \"yes\".\n' + \
 				'This is an automated message. Please do not reply.\n' + \
 				'Best\n' + \
 				'-Yu'
