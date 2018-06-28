@@ -51,4 +51,4 @@ This is a collection of python scripts for daily routines of testing GTA API and
 
 # Question?
 
-Drop a mail to <mailto:yu.leng@gta-travel.com>.
+Drop a mail to <mailto:tctctcly@gmail.com>.
