@@ -40,6 +40,12 @@ This is a collection of python scripts for daily routines of testing GTA API and
 32. [fault_http.py](#) - Example of reading Triometrics xls
 32. [steemit.py](#) - views?
 33. [pname_pool.py](#) - Get pax names from bookings
+34. [asp_multi.py](#) - run asp_pool with multiple dates
+35. [pa_hb.py](#) - run analytics on Ctrip HB price and availability check API log dump
+36. [hb_er.py](#) - Run analytics on HB TRioMetrics price and availability log dump
+37. [hb_report.py](#) - Run sendmail_win_hb to grab email attachment from inbox; Run hr_er to do analytics; send result to relevant parties using sendmail_win_hb2
+38. [sendmail_win_hb.py](#) - Download appropriate pa log file from my inbox and save it
+39. [sendmail_win_hb2.py](#) - Send result to relevant parties
 
 # Question?
 
