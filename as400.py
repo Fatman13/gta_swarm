@@ -36,14 +36,14 @@ clients = { 'Qunar': '5840, 5576, 5673',
 			'ctrip_di': '5997',
 			'hlt': '5148',
 			'Haoqiao': '5549, 5682', 
-			'Dida': '5162, 5406',
+			'Dida': '5162, 5406, 6353',
 			'Hotel_Travel_17': '7598, 7182, 7793',
 			'Hotel_Travel_28': '1123',
 			'StarTravel': '4733' }
 
 @click.command()
 # @click.option('--country', default='Canada')
-@click.option('--client', default='hlt')
+@click.option('--client', default='Dida')
 @click.option('--site', default='41')
 def as400(client, site):
 

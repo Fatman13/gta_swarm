@@ -34,9 +34,9 @@ def dump_csv(res, output_filename, from_date):
 		dict_writer.writerows(res)
 
 @click.command()
-@click.option('--filename', default='output_hotel_ref_')
+@click.option('--filename', default='output_hb_pa_stats_')
 @click.option('--email', default='no-reply@gta-travel.com')
-def sendmail_win_cs(filename, email):
+def sendmail_win_hb2(filename, email):
 	target_filename = filename + '*.csv'
 	newest = max(glob.iglob(target_filename), key=os.path.getctime)
 	print('newest file: ' + newest)
@@ -70,17 +70,17 @@ def sendmail_win_cs(filename, email):
 
 	print('Logged in as: ' + str(email))
 
-	recipient_email = 'yu.leng@gta-travel.com'
-	recipient_email1 = 'Alex.Sha@gta-travel.com'
-	recipient_email2 = 'will.he@gta-travel.com'
-	recipient_email3 = 'Crystal.liu@gta-travel.com'
-	recipient_email4 = 'lily.yu@gta-travel.com'
-	recipient_email6 = 'intern.shanghai@gta-travel.com'
-	recipient_email5 = 'Emilie.wang@gta-travel.com'
+	recipient_email = 'asaf.steinfeld@touricoholidays.com'
+	recipient_email1 = 'ronald.chan@touricoholidays.com'
+	recipient_email2 = 'yun.liu@gta-travel.com'
+	recipient_email3 = 'lwang@hotelbeds.com'
+	recipient_email4 = 'kfu@hotelbeds.com'
 	body_text = 'FYI\n' + \
+				'For chain offline recommendation, please open the attachment and filter \"recommend_offline\" by \"yes\".\n' + \
+				'This is an automated message. Please do not reply.\n' + \
 				'Best\n' + \
 				'-Yu'
-	title_text = '[[[ Ctrip hotel reference ]]]'
+	title_text = '[[[ Ctrip PA Stats ]]]'
 
 	# Or, if you want a copy in e.g. the 'Sent' folder
 	m = Message(
@@ -101,6 +101,7 @@ def sendmail_win_cs(filename, email):
 		# 				Mailbox(email_address=recipient_email5)
 		# 				]
 		to_recipients=[Mailbox(email_address=recipient_email1),
+						Mailbox(email_address=recipient_email),
 						Mailbox(email_address=recipient_email2),
 						Mailbox(email_address=recipient_email3),
 						Mailbox(email_address=recipient_email4)
@@ -115,4 +116,4 @@ def sendmail_win_cs(filename, email):
 	print('Message sent.. ')
 
 if __name__ == '__main__':
-	sendmail_win_cs()
+	sendmail_win_hb2()

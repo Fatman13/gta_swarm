@@ -130,9 +130,9 @@ def add_empty_ent(response, checkin_date, res):
 
 @click.command()
 @click.option('--file_name', default='gta_hotel_keys')
-@click.option('--checkin_d', default='2018-03-21')
+@click.option('--checkin_d', default='2018-06-09')
 # @click.option('--to_d', default='2017-11-20')
-@click.option('--client', default='ali')
+@click.option('--client', default='ctrip_b2b')
 def asp_pool(file_name, checkin_d, client):
 	res = []
 	search_requests = []
@@ -232,13 +232,14 @@ def asp_pool(file_name, checkin_d, client):
 				entry['Currency'] = room_cat.find('.//ItemPrice').get('Currency')
 				res.append(entry)
 
+	# show keys with no rps
 	gta_keys = [ ent['GTA_key'] for ent in res ]
 	# print(str(gta_keys))
-	for hotel_id in hotel_ids:
-		if hotel_id != '' and hotel_id not in gta_keys:
+	for hotel_code in hotel_codes:
+		if '_'.join([hotel_code['city_code'], hotel_code['item_code']]) not in gta_keys:
 			# print(hotel_id)
 			ent = {}
-			ent['GTA_key'] = hotel_id.strip()
+			ent['GTA_key'] = '_'.join([hotel_code['city_code'], hotel_code['item_code']])
 			ent['Check_in'] = checkin_date.strftime('%Y-%m-%d')
 			res.append(ent)
 
@@ -249,7 +250,7 @@ def asp_pool(file_name, checkin_d, client):
 			max_len = len(ent.keys())
 			keys = ent.keys()
 
-	output_file_name = '_'.join([ 'Output_search_price',
+	output_file_name = '_'.join([ 'Output_search_price_pool',
 									client,
 									file_name,
 									checkin_date.strftime('%y%m%d'),

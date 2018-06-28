@@ -95,6 +95,8 @@ def ctripplus(filename, days):
 			hotel_name = driver.find_element_by_css_selector('h1.name').text
 		except NoSuchElementException:
 			continue
+		except WebDriverException:
+			continue
 
 		if len(driver.find_elements_by_css_selector('div.hroom_tr.J_baseRoomlist')) == 0:
 			# logging hotels with no price...
@@ -150,6 +152,8 @@ def ctripplus(filename, days):
 					# res.append(entry)
 				except StaleElementReferenceException:
 					pp.pprint("Error: Elem became stale... fffffffff...")
+				except NoSuchElementException:
+					pp.pprint("Error: No such elem... fff...")
 
 				break
 
@@ -263,6 +267,10 @@ def ctripplus(filename, days):
 					pp.pprint("Error: Elem became stale... fffffffff...")
 				except ValueError:
 					pp.pprint("Error: Value error when converting to float... fffffffff...")
+				except NoSuchElementException:
+					pp.pprint("Error: No such elem... ffff... ")
+				except KeyError:
+					pp.pprint("Error: key error for entry[] ...")
 
 
 				break
