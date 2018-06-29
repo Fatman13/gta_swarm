@@ -79,7 +79,7 @@ def sendmail_win_hb2(filename, email):
 				'For chain offline recommendation, please open the attachment and filter \"recommend_offline\" column by \"yes\".\n' + \
 				'This is an automated message. Please do not reply.\n' + \
 				'Best\n' + \
-				'-Yu'
+				'-Yu Leng'
 	title_text = '[[[ Ctrip PA Stats ]]]'
 
 	# Or, if you want a copy in e.g. the 'Sent' folder

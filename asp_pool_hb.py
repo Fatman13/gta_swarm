@@ -193,7 +193,10 @@ def asp_pool_hb(hotel_file, check_file, client):
 
 		hotel_ids.append(t[15].value)
 
-	url = '/hotel-content-api/1.0/hotels/{{hotel_code}}?language=ENG&useSecondaryLanguage=False'
+	url = 'https://api.hotelbeds.com/hotel-content-api/1.0/hotels/'
+	url_param = '?language=ENG&useSecondaryLanguage=False'
+
+	url_param_format = '?fields=all&language=ENG&from=1&to=1000'
 
 	# res = []
 	# search_requests = []

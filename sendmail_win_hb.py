@@ -116,7 +116,7 @@ def sendmail_win_hb(email, days):
 				print('--- Email date time: ' + str(item.datetime_received))
 				# local_path = os.path.join('/tmp', attachment.name)
 				# local_path = os.path.join('', attachment.name)
-				if 'CTRIP---API-Errors---API-valuation-step-issues' is not in attachment.name:
+				if 'CTRIP---API-Errors---API-valuation-step-issues' not in attachment.name:
 					print('Warning: attachment not API report.. ')
 					continue
 				local_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), attachment.name)
