@@ -80,7 +80,7 @@ def sendmail_win_hb2(filename, email):
 				'This is an automated message. Please do not reply.\n' + \
 				'Best\n' + \
 				'-Yu Leng'
-	title_text = '[[[ APItude PA Stats ]]]'
+	title_text = '[[[ Hotelbeds APItude PA Stats ]]]'
 
 	# Or, if you want a copy in e.g. the 'Sent' folder
 	m = Message(
