@@ -130,6 +130,9 @@ def sendmail_win_hb(email, days):
 						continue
 				print('----> Saved attachment to', local_path)
 
+				# Test break..
+				break
+
 	# recipient_email = 'yu.leng@gta-travel.com'
 	# recipient_email1 = 'Alex.Sha@gta-travel.com'
 	# recipient_email2 = 'will.he@gta-travel.com'
