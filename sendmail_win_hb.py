@@ -33,7 +33,8 @@ def dump_csv(res, output_filename, from_date):
 
 @click.command()
 @click.option('--email', default='yu.leng@gta-travel.com')
-@click.option('--days', default=-1, type=int)
+@click.option('--days', default=-0.5, type=float)
+# @click.option('--hours', default=-12, type=int)
 def sendmail_win_hb(email, days):
 	# target_filename = filename + '*.csv'
 	# newest = max(glob.iglob(target_filename), key=os.path.getctime)
@@ -116,6 +117,7 @@ def sendmail_win_hb(email, days):
 				print('--- Email date time: ' + str(item.datetime_received))
 				# local_path = os.path.join('/tmp', attachment.name)
 				# local_path = os.path.join('', attachment.name)
+				# CTRIP---API-Errors---API-valuation-step-issues--h-_v205111_s2608_2018-07-01-00-00
 				if 'CTRIP---API-Errors---API-valuation-step-issues' not in attachment.name:
 					print('Warning: attachment not API report.. ')
 					continue
@@ -126,7 +128,7 @@ def sendmail_win_hb(email, days):
 					except ErrorItemNotFound:
 						print('Error: item not found.. ')
 						continue
-				print('---- Saved attachment to', local_path)
+				print('----> Saved attachment to', local_path)
 
 	# recipient_email = 'yu.leng@gta-travel.com'
 	# recipient_email1 = 'Alex.Sha@gta-travel.com'
