@@ -75,9 +75,10 @@ def sendmail_win_hb2(filename, email):
 	recipient_email2 = 'yun.liu@gta-travel.com'
 	recipient_email3 = 'lwang@hotelbeds.com'
 	recipient_email4 = 'kfu@hotelbeds.com'
-	body_text = 'FYI\n' + \
-				'For chain offline recommendation, please open the attachment and filter \"recommend_offline\" column by \"yes\".\n' + \
-				'This is an automated message. Please do not reply.\n' + \
+	recipient_email5 = 'yu.leng@hotelbeds.com'
+	body_text = 'FYI\n\n' + \
+				'For chain offline recommendation, please open the attachment and filter \"recommend_offline\" column by \"yes\".\n\n' + \
+				'This is an automated message. Please do not reply.\n\n' + \
 				'Best\n' + \
 				'-Yu Leng'
 	title_text = '[[[ Hotelbeds APItude PA Stats ]]]'
@@ -100,11 +101,18 @@ def sendmail_win_hb2(filename, email):
 		# 				Mailbox(email_address=recipient_email4),
 		# 				Mailbox(email_address=recipient_email5)
 		# 				]
+		# to_recipients=[Mailbox(email_address=recipient_email1),
+		# 				Mailbox(email_address=recipient_email),
+		# 				Mailbox(email_address=recipient_email2),
+		# 				Mailbox(email_address=recipient_email3),
+		# 				Mailbox(email_address=recipient_email4)
+		# 				]
 		to_recipients=[Mailbox(email_address=recipient_email1),
 						Mailbox(email_address=recipient_email),
 						Mailbox(email_address=recipient_email2),
 						Mailbox(email_address=recipient_email3),
-						Mailbox(email_address=recipient_email4)
+						Mailbox(email_address=recipient_email4),
+						Mailbox(email_address=recipient_email5)
 						]
 		)
 

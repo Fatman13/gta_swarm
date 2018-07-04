@@ -129,9 +129,8 @@ def sendmail_win_hb(email, days):
 						print('Error: item not found.. ')
 						continue
 				print('----> Saved attachment to', local_path)
-
 				# Test break..
-				break
+				return
 
 	# recipient_email = 'yu.leng@gta-travel.com'
 	# recipient_email1 = 'Alex.Sha@gta-travel.com'

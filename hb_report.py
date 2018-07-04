@@ -63,7 +63,7 @@ def hua_style_sleep():
 def hb_report():
 
 	# subprocess.call(['python', 'booking_id_ctrip.py', '--days', str(days), '--duration', str(duration), '--d_type', 'departure'])
-	subprocess.call(['python', 'sendmail_win_hb.py', '--days', '-0.5'])
+	subprocess.call(['python', 'sendmail_win_hb.py', '--days', '-1'])
 
 	hua_style_sleep()
 
