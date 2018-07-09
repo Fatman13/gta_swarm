@@ -133,10 +133,10 @@ def add_empty_ent(response, checkin_date, res):
 
 @click.command()
 @click.option('--hotel_file', default='hb_hotels.xlsx')
-@click.option('--check_file', default='hb_image_check.xlsx')
+# @click.option('--check_file', default='hb_image_check.xlsx')
 # @click.option('--to_d', default='2017-11-20')
-@click.option('--client', default='ctrip_hb')
-def asp_pool_hb(hotel_file, check_file, client):
+@click.option('--client', default='ali_hb')
+def asp_pool_hb(hotel_file, client):
 
 	# wb2 = load_workbook('test.xlsx')
 	try:
@@ -171,27 +171,27 @@ def asp_pool_hb(hotel_file, check_file, client):
 	# print(str(hy))
 	# print(str(si))
 
-	try:
-		print('Try loading check file workbook..')
-		wb = load_workbook(check_file)
-		print('Loading workbook.. done..')
-	except FileNotFoundError:
-		print('File not found.. Specify file in --check_file option')
-		return
+	# try:
+	# 	print('Try loading check file workbook..')
+	# 	wb = load_workbook(check_file)
+	# 	print('Loading workbook.. done..')
+	# except FileNotFoundError:
+	# 	print('File not found.. Specify file in --check_file option')
+	# 	return
 
-	ws = wb.active
-	hotel_ids = [] 
-	for i, t in enumerate(tuple(ws.rows)):
-		if i == 0:
-			continue
-		# print('i: ' + str(i))
-		# print(t[0].value)
-		# print(t[9].value)
-		if t[15].value == None
-			print('Warning: No hotel id..')
-			continue
+	# ws = wb.active
+	# hotel_ids = [] 
+	# for i, t in enumerate(tuple(ws.rows)):
+	# 	if i == 0:
+	# 		continue
+	# 	# print('i: ' + str(i))
+	# 	# print(t[0].value)
+	# 	# print(t[9].value)
+	# 	if t[15].value == None
+	# 		print('Warning: No hotel id..')
+	# 		continue
 
-		hotel_ids.append(t[15].value)
+	# 	hotel_ids.append(t[15].value)
 
 	url = 'https://api.hotelbeds.com/hotel-content-api/1.0/hotels/'
 	url_param = '?language=ENG&useSecondaryLanguage=False'
