@@ -63,25 +63,25 @@ def hua_style_sleep():
 def asp_multi():
 
 	# subprocess.call(['python', 'booking_id_ctrip.py', '--days', str(days), '--duration', str(duration), '--d_type', 'departure'])
-	subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-18', '--client', 'haihang'])
+	subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-18', '--client', 'ali'])
 	hua_style_sleep()
 
-	# subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-23', '--client', 'ali'])
-	# hua_style_sleep()
+	subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-23', '--client', 'ali'])
+	hua_style_sleep()
 
-	# subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-25', '--client', 'ali'])
-	# hua_style_sleep()
+	subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-25', '--client', 'ali'])
+	hua_style_sleep()
 
-	# subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-27', '--client', 'ali'])
-	# hua_style_sleep()
+	subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-27', '--client', 'ali'])
+	hua_style_sleep()
 
-	# subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-29', '--client', 'ali'])
-	# hua_style_sleep()
+	subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-29', '--client', 'ali'])
+	hua_style_sleep()
 
-	# subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-30', '--client', 'ali'])
-	# hua_style_sleep()
+	subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-07-30', '--client', 'ali'])
+	hua_style_sleep()
 
-	# subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-08-03', '--client', 'ali'])
+	subprocess.call(['python', 'asp_pool.py', '--checkin_d', '2018-08-03', '--client', 'ali'])
 	hua_style_sleep()
 
 
