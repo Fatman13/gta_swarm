@@ -163,7 +163,7 @@ def add_empty_ent(response, checkin_date, res):
 @click.option('--hotel_file', default='hb_hotels_thai.xlsx')
 # @click.option('--check_file', default='hb_image_check.xlsx')
 @click.option('--from_d', default='2018-08-10')
-@click.option('--to_d', default='2018-08-17')
+@click.option('--to_d', default='2018-08-16')
 @click.option('--client', default='ali_hb')
 def asp_pool_hb(hotel_file, from_d, to_d, client):
 
