@@ -71,7 +71,7 @@ def sendmail_win_hb2(filename, email):
 	print('Logged in as: ' + str(email))
 
 	recipient_email = 'asaf.steinfeld@touricoholidays.com'
-	recipient_email1 = 'ronald.chan@touricoholidays.com'
+	recipient_email1 = 'dan.zhang@touricoholidays.com'
 	recipient_email2 = 'yun.liu@gta-travel.com'
 	recipient_email3 = 'lwang@hotelbeds.com'
 	recipient_email4 = 'kfu@hotelbeds.com'
