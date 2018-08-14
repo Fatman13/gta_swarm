@@ -121,6 +121,7 @@ def sendmail_win_hb2(filename, email):
 	m.attach(update_csv)
 	m.send_and_save()
 
+	# pu rin to
 	print('Message sent.. ')
 
 if __name__ == '__main__':
