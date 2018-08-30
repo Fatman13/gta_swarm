@@ -189,7 +189,11 @@ def asp_pool_hb(hotel_file, from_d, to_d, client):
 		# print('i: ' + str(i))
 		# print(t[0].value)
 		# print(t[9].value)
-		if t[0].value == None or t[9].value == None:
+		# if t[0].value == None or t[9].value == None:
+		# 	print('Warning: No hotel id or contract type..')
+		# 	continue
+
+		if t[0].value == None:
 			print('Warning: No hotel id or contract type..')
 			continue
 
